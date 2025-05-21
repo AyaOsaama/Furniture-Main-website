@@ -11,7 +11,7 @@ import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import i18n from '../i18n'
+import i18n from "../i18n";
 const Cart = () => {
   const { t } = useTranslation("cart");
   const currentLang = i18n.language;
@@ -46,7 +46,9 @@ const Cart = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 mt-8">
-      <h2 className="text-3xl mb-6 mt-8 text-center font-bold text-gray-600">{t("title")}</h2>
+      <h2 className="text-3xl mb-6 mt-8 text-center font-bold text-gray-600">
+        {t("title")}
+      </h2>
 
       {loading && (
         <div
@@ -329,6 +331,13 @@ const Cart = () => {
             </div>
 
             <button
+              className="mt-4 w-full py-3 text-white rounded-full text-base sm:text-lg font-semibold hover:bg-gray-600"
+              style={{ backgroundColor: "rgb(132, 139, 146)" }}
+              onClick={() =>
+                navigate("/checkout", { state: { finalTotal, items } })
+              }
+            >
+              {t("checkoutNow")}
             </button>
           </div>
         </div>
@@ -336,5 +345,5 @@ const Cart = () => {
     </div>
   );
 };
- 
+
 export default Cart;
