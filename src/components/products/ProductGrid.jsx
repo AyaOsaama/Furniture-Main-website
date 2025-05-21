@@ -33,12 +33,19 @@ const ProductGrid = ({
 
   // دالة إضافة للسلة
   const handleAddToCart = async (variant) => {
+    // تحقق من حالة المخزون
+    if (variant.inStock === false || variant.stock === 0) {
+      toast.error(t("outOfStock") || "المنتج غير متوفر حالياً");
+      return;
+    }
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error(
+        t("loginRequired") || "يجب تسجيل الدخول أولاً لإضافة المنتجات للسلة"
+      );
+      return;
+    }
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        toast.error(t("loginRequired"));
-        return;
-      }
       await dispatch(
         addCartItem({
           product: {
@@ -51,25 +58,30 @@ const ProductGrid = ({
       toast.success(t("addedToCart"));
     } catch (error) {
       console.error("Error adding to cart:", error);
-      toast.error(t("errorAddingToCart"));
+      if (
+        error?.message === "Not enough stock available" ||
+        error?.response?.data?.message === "Not enough stock available"
+      ) {
+        toast.error(t("outOfStock") || "المنتج غير متوفر حالياً");
+      } else {
+        toast.error(t("errorAddingToCart"));
+      }
     }
   };
 
   // دالة إضافة للمفضلة
   const handleToggleWishlist = async (productId) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error(
+        t("loginRequired") || "يجب تسجيل الدخول أولاً لإضافة المنتجات للمفضلة"
+      );
+      return;
+    }
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        toast.error(t("loginRequired"));
-        return;
-      }
-
-      const isInWishlist = wishlist.some(item => item._id === productId);
+      const isInWishlist = wishlist.some((item) => item._id === productId);
       await dispatch(toggleWishlistItem(productId)).unwrap();
-      
-      // تحديث المفضلة مباشرة بعد التغيير
       await dispatch(fetchWishlist());
-      
       if (isInWishlist) {
         toast.success(t("removedFromWishlist"));
       } else {
@@ -132,11 +144,15 @@ const ProductGrid = ({
                     handleToggleWishlist(variant.productId);
                   }}
                   className={`bg-white p-3 rounded-full transition-colors ${
-                    wishlist.some(item => item._id === variant.productId)
+                    wishlist.some((item) => item._id === variant.productId)
                       ? "text-red-500 hover:bg-red-100"
                       : "hover:bg-red-500 hover:text-white"
                   }`}
-                  title={wishlist.some(item => item._id === variant.productId) ? t("removeFromWishlist") : t("addToWishlist")}
+                  title={
+                    wishlist.some((item) => item._id === variant.productId)
+                      ? t("removeFromWishlist")
+                      : t("addToWishlist")
+                  }
                 >
                   <FaHeart />
                 </button>
