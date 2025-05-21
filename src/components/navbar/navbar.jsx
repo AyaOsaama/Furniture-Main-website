@@ -8,22 +8,25 @@ import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { SearchContext } from "../../searchContext/SearchContext.jsx";
 import { Link } from "react-router-dom";
- 
+
 function Navbar() {
   const { t, i18n } = useTranslation("navbar");
   const cartItemsCount = useSelector((state) => state.cart.items.length);
-  const wishlistCount = useSelector((state) => state.wishlist?.items?.length || 0);
+  const wishlistCount = useSelector(
+    (state) => state.wishlist?.items?.length || 0
+  );
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [showSearchInput, setShowSearchInput] = useState(false);
+  const [userName, setUserName] = useState(null);
   const searchRef = useRef(null);
   const langRef = useRef(null);
- 
+
   const isHome = pathname === "/";
   const currentLang = i18n.language;
- 
+
   const navLinks = [
     { href: "/", label: t("home") },
     { href: "/shop", label: t("shop") },
@@ -31,21 +34,21 @@ function Navbar() {
     { href: "/about", label: t("about") },
     { href: "/contactus", label: t("contact") },
   ];
- 
+
   const handleLanguageChange = (lng) => {
     i18n.changeLanguage(lng);
     setShowLangMenu(false);
   };
- 
+
   const hideSearchOn = ["/shop", "/contactus", "/blog"];
   const shouldHideSearchIcon = hideSearchOn.includes(pathname);
- 
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
- 
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -55,21 +58,40 @@ function Navbar() {
         setShowLangMenu(false);
       }
     };
- 
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [searchRef, langRef]);
- 
+
+  useEffect(
+    () => {
+      const user = localStorage.getItem("user");
+      if (user) {
+        try {
+          const parsed = JSON.parse(user);
+          setUserName(parsed.name || null);
+        } catch {
+          setUserName(null);
+        }
+      } else {
+        setUserName(null);
+      }
+    },
+    [
+      /* يمكنك إضافة متغيرات تعتمد عليها حالة تسجيل الدخول */
+    ]
+  );
+
   const navbarEffect = scrolled
     ? "backdrop-blur-md bg-white/70 shadow-md text-black"
     : isHome
     ? "text-white"
     : "text-black";
- 
+
   const { searchQuery, setSearchQuery } = useContext(SearchContext);
- 
+
   const handleUserIconClick = () => {
     const user = localStorage.getItem("user");
     if (user) {
@@ -78,26 +100,26 @@ function Navbar() {
       navigate("/login");
     }
   };
- 
+
   const handleSearch = () => {
     if (searchQuery.trim() !== "") {
       navigate(`/shop?search=${searchQuery}`);
       setShowSearchInput(false);
     }
   };
- 
+
   const toggleSearchInput = () => {
     setShowSearchInput(!showSearchInput);
   };
- 
+
   const iconColor = scrolled || !isHome ? "text-gray-700" : "text-white";
- 
+
   // تعديل دالة تغيير اللغة لتعمل كتوجل مباشر
   const toggleLanguage = () => {
     const newLang = currentLang === "ar" ? "en" : "ar";
     i18n.changeLanguage(newLang);
   };
- 
+
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${navbarEffect}`}
@@ -114,7 +136,7 @@ function Navbar() {
               FurniITI
             </button>
           </div>
- 
+
           {/* Navigation Links */}
           <div className="navbar-center">
             <ul className="menu menu-horizontal font-medium text-sm">
@@ -132,13 +154,19 @@ function Navbar() {
               ))}
             </ul>
           </div>
- 
+
           {/* Icons */}
           <div className="navbar-end flex items-center gap-5">
             {/* Search */}
             {!shouldHideSearchIcon && (
               <div className="relative flex items-center" ref={searchRef}>
-                <div className={`flex items-center overflow-hidden transition-all duration-500 ease-in-out ${showSearchInput ? 'w-[220px] border rounded-full bg-white/90' : 'w-5'}`}>
+                <div
+                  className={`flex items-center overflow-hidden transition-all duration-500 ease-in-out ${
+                    showSearchInput
+                      ? "w-[220px] border rounded-full bg-white/90"
+                      : "w-5"
+                  }`}
+                >
                   {showSearchInput && (
                     <input
                       type="search"
@@ -154,16 +182,24 @@ function Navbar() {
                       autoFocus
                     />
                   )}
-                  <div className={`${showSearchInput ? 'px-2' : ''} min-w-[20px] flex items-center justify-center`}>
+                  <div
+                    className={`${
+                      showSearchInput ? "px-2" : ""
+                    } min-w-[20px] flex items-center justify-center`}
+                  >
                     <FaSearch
-                      className={`w-5 h-5 min-w-[20px] min-h-[20px] cursor-pointer ${showSearchInput ? 'text-gray-700' : iconColor} hover:opacity-80 transition-opacity`}
-                      onClick={showSearchInput ? handleSearch : toggleSearchInput}
+                      className={`w-5 h-5 min-w-[20px] min-h-[20px] cursor-pointer ${
+                        showSearchInput ? "text-gray-700" : iconColor
+                      } hover:opacity-80 transition-opacity`}
+                      onClick={
+                        showSearchInput ? handleSearch : toggleSearchInput
+                      }
                     />
                   </div>
                 </div>
               </div>
             )}
-           
+
             {/* Favorites */}
             <div className="relative flex items-center justify-center min-w-[20px] min-h-[20px]">
               <Link to="/wishlist" className="relative">
@@ -177,7 +213,7 @@ function Navbar() {
                 )}
               </Link>
             </div>
-           
+
             {/* Cart */}
             <div className="relative flex items-center justify-center min-w-[20px] min-h-[20px]">
               <img
@@ -192,33 +228,55 @@ function Navbar() {
                 </span>
               )}
             </div>
- 
+
             {/* Language */}
             <div className="relative flex items-center justify-center">
               <button
                 className={`w-7 h-7 rounded-full flex items-center justify-center font-medium text-xs cursor-pointer border ${iconColor} hover:opacity-80 transition-opacity`}
                 onClick={toggleLanguage}
-                aria-label={`Switch to ${currentLang === "ar" ? "English" : "Arabic"}`}
+                aria-label={`Switch to ${
+                  currentLang === "ar" ? "English" : "Arabic"
+                }`}
               >
                 {currentLang === "ar" ? "EN" : "AR"}
               </button>
             </div>
- 
+
             {/* User */}
             <div className="relative flex items-center justify-center min-w-[20px] min-h-[20px]">
-              <FaRegUser
-                className={`w-5 h-5 min-w-[20px] min-h-[20px] cursor-pointer ${iconColor} hover:opacity-80 transition-opacity`}
-                onClick={handleUserIconClick}
-              />
+              {userName ? (
+                <span
+                  className={`flex items-center gap-1 font-medium text-xs ${iconColor} cursor-pointer`}
+                  onClick={handleUserIconClick}
+                >
+                  <FaRegUser
+                    className={`w-5 h-5 min-w-[20px] min-h-[20px] ${iconColor}`}
+                  />
+                  {userName}
+                </span>
+              ) : (
+                <FaRegUser
+                  className={`w-5 h-5 min-w-[20px] min-h-[20px] cursor-pointer ${iconColor} hover:opacity-80 transition-opacity`}
+                  onClick={handleUserIconClick}
+                />
+              )}
             </div>
           </div>
         </div>
       </div>
- 
+
       {/* Mobile Navigation - Two-Row Header */}
       <div className="lg:hidden">
         {/* Top Row - Logo, Menu, and Search */}
-        <div className={`flex items-center justify-between px-4 py-2 ${scrolled ? 'bg-white/90 shadow-sm' : isHome ? 'bg-transparent' : 'bg-white/90'}`}>
+        <div
+          className={`flex items-center justify-between px-4 py-2 ${
+            scrolled
+              ? "bg-white/90 shadow-sm"
+              : isHome
+              ? "bg-transparent"
+              : "bg-white/90"
+          }`}
+        >
           <div className="flex items-center">
             <div className="dropdown">
               <label tabIndex={0} className="btn btn-ghost btn-circle">
@@ -249,7 +307,9 @@ function Navbar() {
                   <li key={link.href} className="mb-2">
                     <button
                       onClick={() => navigate(link.href)}
-                      className={`py-2 ${pathname === link.href ? "font-bold" : ""}`}
+                      className={`py-2 ${
+                        pathname === link.href ? "font-bold" : ""
+                      }`}
                     >
                       {link.label}
                     </button>
@@ -264,11 +324,17 @@ function Navbar() {
               FurniITI
             </button>
           </div>
-         
+
           {/* Search in Top Row */}
           {!shouldHideSearchIcon && (
             <div className="relative flex items-center" ref={searchRef}>
-              <div className={`flex items-center overflow-hidden transition-all duration-500 ease-in-out ${showSearchInput ? 'w-[150px] border rounded-full bg-white/90' : 'w-5'}`}>
+              <div
+                className={`flex items-center overflow-hidden transition-all duration-500 ease-in-out ${
+                  showSearchInput
+                    ? "w-[150px] border rounded-full bg-white/90"
+                    : "w-5"
+                }`}
+              >
                 {showSearchInput && (
                   <input
                     type="search"
@@ -284,9 +350,15 @@ function Navbar() {
                     autoFocus
                   />
                 )}
-                <div className={`${showSearchInput ? 'px-2' : ''} min-w-[20px] flex items-center justify-center`}>
+                <div
+                  className={`${
+                    showSearchInput ? "px-2" : ""
+                  } min-w-[20px] flex items-center justify-center`}
+                >
                   <FaSearch
-                    className={`w-5 h-5 min-w-[20px] min-h-[20px] cursor-pointer ${showSearchInput ? 'text-gray-700' : iconColor} hover:opacity-80 transition-opacity`}
+                    className={`w-5 h-5 min-w-[20px] min-h-[20px] cursor-pointer ${
+                      showSearchInput ? "text-gray-700" : iconColor
+                    } hover:opacity-80 transition-opacity`}
                     onClick={showSearchInput ? handleSearch : toggleSearchInput}
                   />
                 </div>
@@ -294,20 +366,30 @@ function Navbar() {
             </div>
           )}
         </div>
-       
+
         {/* Bottom Row - Icons */}
-        <div className={`flex items-center justify-evenly px-4 py-2 ${scrolled ? 'bg-white/80 shadow-md' : isHome ? 'bg-black/20' : 'bg-white/80'}`}>
+        <div
+          className={`flex items-center justify-evenly px-4 py-2 ${
+            scrolled
+              ? "bg-white/80 shadow-md"
+              : isHome
+              ? "bg-black/20"
+              : "bg-white/80"
+          }`}
+        >
           {/* Language */}
           <div className="relative flex items-center justify-center min-w-[20px] min-h-[20px]">
             <button
               className={`w-7 h-7 rounded-full flex items-center justify-center font-medium text-xs cursor-pointer border ${iconColor} hover:opacity-80 transition-opacity`}
               onClick={toggleLanguage}
-              aria-label={`Switch to ${currentLang === "ar" ? "English" : "Arabic"}`}
+              aria-label={`Switch to ${
+                currentLang === "ar" ? "English" : "Arabic"
+              }`}
             >
               {currentLang === "ar" ? "EN" : "AR"}
             </button>
           </div>
-         
+
           {/* Favorites */}
           <div className="relative flex items-center justify-center min-w-[20px] min-h-[20px]">
             <Link to="/wishlist" className="relative">
@@ -321,7 +403,7 @@ function Navbar() {
               )}
             </Link>
           </div>
-         
+
           {/* Cart */}
           <div className="relative flex items-center justify-center min-w-[20px] min-h-[20px]">
             <img
@@ -336,18 +418,30 @@ function Navbar() {
               </span>
             )}
           </div>
- 
+
           {/* User */}
           <div className="relative flex items-center justify-center min-w-[20px] min-h-[20px]">
-            <FaRegUser
-              className={`w-5 h-5 min-w-[20px] min-h-[20px] cursor-pointer ${iconColor} hover:opacity-80 transition-opacity`}
-              onClick={handleUserIconClick}
-            />
+            {userName ? (
+              <span
+                className={`flex items-center gap-1 font-medium text-xs ${iconColor} cursor-pointer`}
+                onClick={handleUserIconClick}
+              >
+                <FaRegUser
+                  className={`w-5 h-5 min-w-[20px] min-h-[20px] ${iconColor}`}
+                />
+                {userName}
+              </span>
+            ) : (
+              <FaRegUser
+                className={`w-5 h-5 min-w-[20px] min-h-[20px] cursor-pointer ${iconColor} hover:opacity-80 transition-opacity`}
+                onClick={handleUserIconClick}
+              />
+            )}
           </div>
         </div>
       </div>
     </nav>
   );
 }
- 
+
 export default Navbar;

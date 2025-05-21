@@ -20,6 +20,13 @@ const Checkout = () => {
   const [isMobileSummaryOpen, setIsMobileSummaryOpen] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (!user) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
