@@ -3,6 +3,7 @@ import { CiHeart } from "react-icons/ci";
 import { RiSearch2Line } from "react-icons/ri";
 import { useTranslation } from "react-i18next";
 import i18n from "../../../../i18n";
+import { Link } from "react-router";
  
  
 const BlogSidebar = ({ posts, searchTerm, onSearchChange }) => {
@@ -41,13 +42,15 @@ const BlogSidebar = ({ posts, searchTerm, onSearchChange }) => {
                     <h4 className="font-medium text-lg line-clamp-2">
                       {post.title?.[currentLanguage] || post.title?.ar || t("blogSidebar.defaultTitle")}
                     </h4>
-                    {post.image && (
-                      <img
-                        src={post.image}
-                        className="w-full h-40 object-cover"
-                        alt={post.title?.[currentLanguage] || "Blog post"}
-                      />
-                    )}
+                                        {post.image && (
+                                          <Link to={`/blog/${post._id}`}>
+                                            <img
+                                              src={post.image}
+                                              alt={post.title?.[currentLanguage] || t("postImageAlt")}
+                                              className="w-full h-40 object-cover"
+                                            />
+                                          </Link>
+                                        )}
                     <div className="flex items-center justify-between">
                       <div className="text-gray-500 text-sm">
                         {post.description?.[currentLanguage] || ""}...
@@ -68,7 +71,8 @@ const BlogSidebar = ({ posts, searchTerm, onSearchChange }) => {
               {recentPosts.map((post) => {
                 const postTitle = post.title?.[currentLanguage] || post.title?.ar || t("blogSidebar.defaultRecentTitle");
                 return (
-                  <div key={`recent-${post._id}`} className="flex items-center justify-between">
+                  <Link to={`/blog/${post._id}`}>
+                  <div key={`recent-${post._id}`} className="flex items-center justify-between mb-4">
                     <h4 className="text-base text-heading-blog">{postTitle}</h4>
                     <div className="text-xs text-gray-500">
                       {new Date(post.createdAt).toLocaleDateString("en-US", {
@@ -78,6 +82,7 @@ const BlogSidebar = ({ posts, searchTerm, onSearchChange }) => {
                       })}
                     </div>
                   </div>
+                  </Link>
                 );
               })}
             </div>

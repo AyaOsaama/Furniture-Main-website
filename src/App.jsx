@@ -30,10 +30,12 @@ import WishlistPage from "./components/wishList/wishList.jsx";
 import Chatbot from "./components/Chatbot/Chatbot.jsx";
 import { FaComments } from "react-icons/fa";
 import "./chatbot-animate.css"; // سنضيف هذا الملف للأنيميشن
+import Tables from "./components/products/Tables.jsx";
+import Chairs from "./components/products/Chairs.jsx";
 
 const LayoutWithNavFooter = ({ children }) => (
   <>
-    <Navbar />
+    <Navbar style={"padding-top:50"}/>
     {children}
     <Footer />
   </>
@@ -53,6 +55,18 @@ function AppRoutes({
     <>
       <Routes>
         {/* Routes without Navbar/Footer */}
+        <Route path="/tables"
+        element={ 
+        <LayoutWithoutNavFooter>
+              <Tables />
+            </LayoutWithoutNavFooter>}
+        ></Route>
+        <Route path="/Chairs"
+        element={ 
+        <LayoutWithoutNavFooter>
+              <Chairs />
+            </LayoutWithoutNavFooter>}
+        ></Route>
         <Route
           path="/checkout"
           element={

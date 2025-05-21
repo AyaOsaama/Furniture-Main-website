@@ -22,13 +22,11 @@ const PostComments = ({ post }) => {
     error: null,
   });
 
-  // جلب الكومنتات
   useEffect(() => {
     const fetchComments = async () => {
       try {
         const res = await api.get(`/posts/${post._id}`);
         setComments(res.data.comments || []);
-        console.log(setComments);
       } catch (err) {
         setComments([]);
       }
@@ -36,7 +34,6 @@ const PostComments = ({ post }) => {
     fetchComments();
   }, [post._id]);
 
-  // حفظ اسم المستخدم لو اختار ذلك
   useEffect(() => {
     const savedInfo = localStorage.getItem("commentUserInfo");
     if (savedInfo) {
@@ -68,7 +65,6 @@ const PostComments = ({ post }) => {
     }));
   };
 
-  // إرسال الكومنت
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitStatus({ loading: true, success: false, error: null });
@@ -83,7 +79,7 @@ const PostComments = ({ post }) => {
       try {
         const parsedUser = JSON.parse(user);
         userId = parsedUser.id;
-        userName = parsedUser.userName; // تأكد أن userName موجود في localStorage
+        userName = parsedUser.userName;
         userImage = parsedUser.image;
         userEmail = parsedUser.email;
       } catch (err) {
@@ -113,7 +109,6 @@ const PostComments = ({ post }) => {
         ...(!prev.saveInfo && { name: "" }),
       }));
 
-      // استخدم بيانات user من الـ API أو من localStorage إذا لم تتوفر
       setComments((prev) => [
         ...prev,
         {
@@ -138,26 +133,25 @@ const PostComments = ({ post }) => {
     }
   };
 
-  // تحديث الكومنتات عند تغيير البوست أو الكومنتس
   useEffect(() => {
     setComments(post.comments || []);
   }, [post]);
 
   return (
-    <div className="max-w-2xl mx-auto my-8 p-6 bg-white rounded-lg shadow">
+    <div className="max-w-4xl mx-auto px-4 py-6 sm:px-6 lg:px-8 bg-white rounded-2xl shadow-lg mt-10">
       <button
         onClick={() => setShowComments((prev) => !prev)}
-        className="mb-4 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 font-semibold"
+        className="mb-6 px-5 py-2 rounded-lg bg-blue-100 text-blue-800 hover:bg-blue-200 transition font-semibold text-sm"
       >
         {showComments ? t("hideComments") : t("showComments")}
       </button>
 
       {showComments && (
         <>
-          {/* عرض كل الكومنتات */}
+          {/* Comments List */}
           <div className="mb-6">
-            <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
-              <img src={MessageIcon} alt="comments" className="w-5 h-5" />
+            <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-800">
+              <img src={MessageIcon} alt="comments" className="w-6 h-6" />
               {t("comments")}
             </h3>
             {comments.length === 0 ? (
@@ -165,8 +159,7 @@ const PostComments = ({ post }) => {
             ) : (
               <ul className="space-y-4">
                 {comments.map((c, idx) => {
-                  // استخراج الاسم
-                  let name =
+                  const name =
                     c.user?.userName?.[currentLanguage] ||
                     c.user?.userName?.en ||
                     c.user?.userName?.ar ||
@@ -174,8 +167,7 @@ const PostComments = ({ post }) => {
                     c.user?.email?.split("@")[0] ||
                     t("anonymous");
 
-                  // استخراج الصورة
-                  let image =
+                  const image =
                     c.user?.image ||
                     c.user?.avatar ||
                     "https://ui-avatars.com/api/?name=" +
@@ -184,17 +176,20 @@ const PostComments = ({ post }) => {
                   return (
                     <li
                       key={c._id || idx}
-                      className="flex items-start gap-3 bg-gray-50 p-3 rounded"
+                      className="flex items-start gap-4 bg-gray-100 rounded-xl p-4"
                     >
                       <img
                         src={image}
                         alt={name}
-                        className="w-10 h-10 rounded-full border object-cover"
+                        className="w-12 h-12 rounded-full border object-cover"
                       />
                       <div>
-                        <div className="font-semibold">{name}</div>
-                        <div className="text-gray-700">{c.comment}</div>
-                        {/* تم حذف التاريخ هنا */}
+                        <div className="font-semibold text-sm text-gray-800">
+                          {name}
+                        </div>
+                        <div className="text-gray-700 text-sm">
+                          {c.comment}
+                        </div>
                       </div>
                     </li>
                   );
@@ -203,14 +198,16 @@ const PostComments = ({ post }) => {
             )}
           </div>
 
-          {/* فورم إضافة كومنت */}
+          {/* Add Comment Form */}
           <form
             onSubmit={handleSubmit}
-            className="space-y-4 bg-gray-100 p-4 rounded"
+            className="space-y-4 bg-gray-50 p-6 rounded-xl border"
           >
-            {/* تم حذف حقل الاسم */}
             <div>
-              <label htmlFor="comment" className="block font-medium mb-1">
+              <label
+                htmlFor="comment"
+                className="block font-medium mb-2 text-sm text-gray-700"
+              >
                 {t("comment.yourComment")}
               </label>
               <textarea
@@ -219,38 +216,38 @@ const PostComments = ({ post }) => {
                 value={commentData.comment}
                 onChange={handleInputChange}
                 required
-                className="w-full px-3 py-2 border rounded"
+                rows={3}
+                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-300 focus:outline-none"
               />
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-sm text-gray-600">
               <input
                 type="checkbox"
                 id="saveInfo"
                 name="saveInfo"
                 checked={commentData.saveInfo}
                 onChange={handleInputChange}
+                className="w-4 h-4"
               />
-              <label htmlFor="saveInfo" className="text-sm">
-                {t("comment.savingInfo")}
-              </label>
+              <label htmlFor="saveInfo">{t("comment.savingInfo")}</label>
             </div>
             <button
               type="submit"
               disabled={submitStatus.loading}
-              className="btn btn-primary px-6 py-2 rounded"
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
               {submitStatus.loading
-                ? t("comment.loading") || "Loading..."
+                ? t("comment.loading")
                 : t("comment.submit")}
             </button>
 
             {submitStatus.success && (
-              <p className="text-green-600">
+              <p className="text-green-600 text-sm">
                 {t("comment.success") || "Comment submitted successfully!"}
               </p>
             )}
             {submitStatus.error && (
-              <p className="text-red-500">{submitStatus.error}</p>
+              <p className="text-red-500 text-sm">{submitStatus.error}</p>
             )}
           </form>
         </>
