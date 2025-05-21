@@ -18,29 +18,36 @@ const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { items, loading, error } = useSelector((state) => state.cart);
- 
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (!user) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     const userId = storedUser?.id;
- 
+
     if (userId) {
       dispatch(fetchCart(userId));
     }
   }, [dispatch]);
- 
+
   const total = items.reduce(
     (acc, item) => acc + item.priceAtAddition * item.quantity,
     0
   );
- 
+
   const deliveryFee = 50;
   const discount = total * 0.1;
   const finalTotal = total - discount + deliveryFee;
- 
+
   return (
     <div className="container mx-auto px-4 py-8 mt-8">
       <h2 className="text-3xl mb-6 mt-8 text-center font-bold text-gray-600">{t("title")}</h2>
- 
+
       {loading && (
         <div
           style={{
@@ -54,7 +61,7 @@ const Cart = () => {
         </div>
       )}
       {error && <p className="text-red-500">{error.message || t("error")}</p>}
- 
+
       {!loading && items.length === 0 && (
         <div className="text-center mt-10">
           <p className="text-xl mb-4 mt-8">{t("empty")}</p>
@@ -66,7 +73,7 @@ const Cart = () => {
           </Link>
         </div>
       )}
- 
+
       {items.length > 0 && (
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Cart Items */}
@@ -155,7 +162,7 @@ const Cart = () => {
                   </tbody>
                 </table>
               </div>
- 
+
               {/* Mobile and Tablet Card View */}
               <div className="md:hidden space-y-4 mt-2">
                 {items.map((item) => (
@@ -181,7 +188,7 @@ const Cart = () => {
                         />
                       </svg>
                     </button>
- 
+
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                       {/* الصورة */}
                       <img
@@ -189,7 +196,7 @@ const Cart = () => {
                         alt={item.productId.variants[0].name[currentLang]}
                         className="w-full sm:w-32 h-32 object-cover rounded-lg"
                       />
- 
+
                       {/* التفاصيل */}
                       <div className="flex flex-col justify-between flex-1 w-full">
                         <div>
@@ -201,7 +208,7 @@ const Cart = () => {
                             {item.productId.variants[0].color[currentLang]}
                           </p>
                         </div>
- 
+
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-4 gap-2">
                           {/* التحكم في الكمية */}
                           <div className="flex items-center border border-gray-300 rounded-md px-2 py-1 bg-gray-50 w-fit text-sm">
@@ -237,7 +244,7 @@ const Cart = () => {
                               <FaPlus className="text-sm" />
                             </button>
                           </div>
- 
+
                           {/* السعر */}
                           <div className="text-lg font-bold text-green-600">
                             {(item.priceAtAddition * item.quantity).toFixed(2)}{" "}
@@ -249,7 +256,7 @@ const Cart = () => {
                   </div>
                 ))}
               </div>
- 
+
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={() => dispatch(clearCartItems())}
@@ -261,12 +268,12 @@ const Cart = () => {
               </div>
             </div>
           </div>
- 
+
           {/* Order Summary */}
           <div className="bg-white rounded-xl shadow p-4 sm:p-6 flex flex-col justify-between h-auto">
             <div>
               <h3 className="text-lg font-bold mb-4">{t("orderSummary")}</h3>
- 
+
               <div className="flex flex-col gap-2 mb-4 w-full">
                 <input
                   type="text"
@@ -288,7 +295,7 @@ const Cart = () => {
                   {t("apply")}
                 </button>
               </div>
- 
+
               <div className="space-y-2 text-sm pt-3 pb-3">
                 <div className="flex justify-between mb-2">
                   <span>{t("subTotal")}</span>
@@ -307,7 +314,7 @@ const Cart = () => {
                   <span>{finalTotal.toFixed(2)} USD</span>
                 </div>
               </div>
- 
+
               <div className="mt-3 text-sm text-gray-600">
                 <label className="inline-flex items-start gap-1">
                   <input type="checkbox" className="mt-1" defaultChecked />
@@ -320,15 +327,8 @@ const Cart = () => {
                 </label>
               </div>
             </div>
- 
+
             <button
-              className="mt-4 w-full py-3 text-white rounded-full text-base sm:text-lg font-semibold hover:bg-gray-600"
-              style={{ backgroundColor: "rgb(132, 139, 146)" }}
-              onClick={() =>
-                navigate("/checkout", { state: { finalTotal, items } })
-              }
-            >
-              {t("checkoutNow")}
             </button>
           </div>
         </div>

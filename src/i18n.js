@@ -6,8 +6,8 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import navbarEN from "./locales/en/navbar.json";
 import aboutEN from "./locales/en/about.json";
 import blogEN from "./locales/en/blog.json";
-import cartEN from "./locales/en/cart.json"; // صححت مسار cartEN
-import changepasswordEN from "./locales/en/changepassword.json"; // صححت مسار
+import cartEN from "./locales/en/cart.json"; 
+import changepasswordEN from "./locales/en/changepassword.json"; 
 import checkoutEN from "./locales/en/checkout.json";
 import contactusEN from "./locales/en/contactus.json";
 import footerEN from "./locales/en/footer.json";
@@ -27,8 +27,8 @@ import chatbotEN from "./locales/en/chatbot.json";
 import navbarAR from "./locales/ar/navbar.json";
 import aboutAR from "./locales/ar/about.json";
 import blogAR from "./locales/ar/blog.json";
-import cartAR from "./locales/ar/cart.json"; // صححت مسار cartAR
-import changepasswordAR from "./locales/ar/changepassword.json"; // صححت مسار
+import cartAR from "./locales/ar/cart.json"; 
+import changepasswordAR from "./locales/ar/changepassword.json";
 import checkoutAR from "./locales/ar/checkout.json";
 import contactusAR from "./locales/ar/contactus.json";
 import footerAR from "./locales/ar/footer.json";
