@@ -16,9 +16,11 @@ import coverThree from "../assets/images/c3.jpg";
 import coverFour from "../assets/images/c4.jpg";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
+import i18n from "../i18n.js";
 
 function Home() {
   const { t } = useTranslation("home");
+  const currentLang = i18n.language
   const { searchQuery } = useContext(SearchContext);
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
@@ -218,7 +220,7 @@ function Home() {
                 <figure className="h-48 overflow-hidden">
                   <img
                     src={post.image}
-                    alt={post.title.en}
+                    alt={post.title?.[currentLang]}
                     className="w-full h-full object-cover"
                   />
                 </figure>
@@ -227,10 +229,10 @@ function Home() {
                     {post.createdAt}
                   </p>
                   <h3 className="card-title text-lg sm:text-xl text-[#2D2D2D] font-bold font-[PTSans] mt-2">
-                    {post.title.en}
+                    {post.title?.[currentLang]}
                   </h3>
                   <p className="text-[#ABABAB] mt-2 mb-4">
-                    {post.description.en}
+                    {post.description?.[currentLang]}
                   </p>
                   <div className="card-actions">
                     <Link to={`/blog/${post._id}`}>
