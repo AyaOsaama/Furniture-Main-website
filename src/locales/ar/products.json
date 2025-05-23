@@ -18,6 +18,17 @@
     "colors.more": "{{count}} لون إضافي",
     "price.title": "السعر",
     "price.range": "السعر من ${{min}} إلى ${{max}}",
-    "price.button": "تصفية"
+    "price.button": "تصفية",
+    "Products Filters":"تصفية المنتجات",
+    "outOfStock":"المنتج غير متوفر حالياً",
+    "loginRequired":"يجب تسجيل الدخول أولاً لإضافة المنتجات للسلة",
+    "removedFromWishlist":"تم إزالة المنتج من المفضلة",
+    "addedToWishlist":"تم إضافة المنتج إلى المفضلة",
+    "errorTogglingWishlist":"حدث خطأ أثناء تعديل المفضلة",
+    "errorAddingToCart":"حدث خطأ أثناء إضافة المنتج إلى السلة",
+    "error":"حدث خطأ",
+    "errorLoadingProducts":"حدث خطأ أثناء تحميل المنتجات",
+    "addedToCart":"تم إضافة المنتج إلى السلة",
+    "errorRemovingFromCart":"حدث خطأ أثناء إزالة المنتج من السلة"
 
 }

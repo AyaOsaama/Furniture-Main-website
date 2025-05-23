@@ -1,11 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import ProductRatings from "./ProductRatings";
+import { api } from '../../../../axios/axios';
+import Reviews from "./Reviews";
 
 const ProductTabs = ({ product }) => {
   const [activeTab, setActiveTab] = useState("description");
   const { t, i18n } = useTranslation("productdetails");
-
   const tabs = ["description", "additional", "preview"];
+
+  // State to track if there are ratings
+  const [hasRatings, setHasRatings] = useState(null);
+
+  useEffect(() => {
+    if (activeTab === "additional" && product?._id) {
+      api.get(`/ratings/product/${product._id}`)
+        .then(res => {
+          const ratings = res.data?.ratings || [];
+          setHasRatings(ratings.length > 0);
+        })
+        .catch(() => setHasRatings(false));
+    }
+  }, [activeTab, product?._id]);
+  
 
   return (
     <div className="mt-12">
@@ -35,15 +52,19 @@ const ProductTabs = ({ product }) => {
         )}
 
         {activeTab === "additional" && (
-          <div className="flex justify-center">
-            <p className="text-gray-500">{t("productTabs.noAdditional")}</p>
+          <div className="flex justify-center" style={{ width: '100%' }}>
+            {hasRatings === null ? (
+              <span className="loading loading-spinner"></span>
+            ) : hasRatings ? (
+              <ProductRatings productId={product._id} />
+            ) : (
+              <p className="text-gray-500">{t("productTabs.noAdditional")}</p>
+            )}
           </div>
         )}
 
         {activeTab === "preview" && (
-          <div className="flex justify-center">
-            <p className="text-gray-500">{t("productTabs.noPreview")}</p>
-          </div>
+          <Reviews productId={product._id} />
         )}
       </div>
     </div>

@@ -118,11 +118,11 @@ const OrderItems = () => {
                     <th className="p-3 text-sm font-semibold">{t("quantity")}</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody >
                   {products.map((item, index) => {
                     const variant = item.productId?.variants?.[0];
                     return (
-                      <tr key={item._id} className="border-t hover:bg-gray-50">
+                      <tr key={item._id} className="border-t hover:bg-gray-50" onClick={() => navigate(`/shop/${item.productId._id}`)}>
                         <td className="p-3 text-sm">{index + 1}</td>
                         <td className="p-3">
                           <div className="w-16 h-16 rounded overflow-hidden">
@@ -157,7 +157,7 @@ const OrderItems = () => {
                 {products.map((item, index) => {
                   const variant = item.productId?.variants?.[0];
                   return (
-                    <div key={item._id} className="p-4">
+                    <div key={item._id} className="p-4" onClick={() => navigate(`/shop/${item.productId._id}`)}>
                       <div className="flex items-start space-x-4">
                         <div className="relative">
                           <div className="w-20 h-20 rounded overflow-hidden">

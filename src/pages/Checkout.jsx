@@ -6,7 +6,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { api } from "../axios/axios";
 import { useDispatch } from "react-redux";
 import { clearCartItems } from "../redux/cartActions";
 
@@ -126,25 +126,20 @@ const Checkout = () => {
       const products = state.items.map((item) => ({
         productId: item._id,
         quantity: item.quantity,
-        priceAtPurchase: item.priceAtAddition, // أو item.price حسب ما هو متوفر
+        priceAtPurchase: item.priceAtAddition,
       }));
 
       const body = {
         shippingAddress,
         paymentMethod: method,
-        products, // أضف المنتجات هنا
+        products,
       };
 
       if (method === "paypal" && paypalOrderId) {
         body.paypalOrderId = paypalOrderId;
       }
-      const token = localStorage.getItem("token");
-      await axios.post("http://localhost:3000/orders", body, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+
+      await api.post("/orders", body);
       dispatch(clearCartItems());
       navigate("/orders");
     } catch (error) {
@@ -593,7 +588,6 @@ const Checkout = () => {
                           formData.shipping === "standard" ? 7 : 10;
                         const total = (finalTotal + shippingCost).toFixed(2);
 
-                        console.log("PayPal total:", total);
 
                         return actions.order.create({
                           purchase_units: [

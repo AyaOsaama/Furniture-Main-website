@@ -12,5 +12,6 @@
   "date": "التاريخ",
   "price": "السعر",
   "quantity": "الكمية",
-  "back": "رجوع"
+  "back": "رجوع",
+  "shippingDetails": "تفاصيل الشحن"
 }

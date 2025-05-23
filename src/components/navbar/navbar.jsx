@@ -133,7 +133,7 @@ function Navbar() {
               className="text-2xl font-semibold cursor-pointer"
               onClick={() => navigate("/")}
             >
-              FurniITI
+              ℂ𝑜𝓏𝘺𝐾𝓪𝕣𝘵
             </button>
           </div>
 
@@ -321,7 +321,7 @@ function Navbar() {
               className="text-xl font-semibold cursor-pointer ml-1"
               onClick={() => navigate("/")}
             >
-              FurniITI
+              ℂ𝑜𝓏𝘺𝐾𝓪𝕣𝘵
             </button>
           </div>
 

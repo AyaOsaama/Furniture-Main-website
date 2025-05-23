@@ -1,23 +1,25 @@
-
 {
   "loading": "جارٍ تحميل المنتج...",
   "error": "خطأ: {{message}}",
   "backToProducts": "العودة إلى المنتجات",
+  "mustLoginFirst": "يجب عليك تسجيل الدخول أولاً",
 
   "productTabs": {
     "description": "الوصف",
-    "additional": "معلومات إضافية",
-    "preview": "معاينة",
+    "additional": "عرض التقييمات",
+    "preview": "التقييمات",
     "noDescription": "لا يوجد وصف متاح.",
-    "noAdditional": "لا توجد معلومات إضافية",
-    "noPreview": "لا توجد معاينة متاحة"
+    "noAdditional": " لا توجد تقييمات  ",
+    "noPreview": "لا توجد معاينة متاحة",
+    "mustLoginFirst": "يجب عليك تسجيل الدخول أولاً"
   },
 
   "relatedProducts": {
     "title": "منتجات ذات صلة",
     "noRelated": "لا توجد منتجات ذات صلة...",
     "defaultAlt": "منتج ذو صلة",
-    "defaultName": "منتج"
+    "defaultName": "منتج",
+    "mustLoginFirst": "يجب عليك تسجيل الدخول أولاً"
   },
 
   "productInfo": {
@@ -33,7 +35,34 @@
     "noColor": "لا توجد معلومات عن اللون.",
     "material": "الخامة",
     "noMaterial": "لا توجد معلومات عن الخامة.",
-     "mustLoginFirst": "يجب عليك تسجيل الدخول أولاً",
-  "addedToCart": "تمت الإضافة إلى السلة بنجاح"
-  }
+    "mustLoginFirst": "يجب عليك تسجيل الدخول أولاً",
+    "addedToCart": "تمت الإضافة إلى السلة بنجاح",
+    "removedFromWishlist": "تم إزالة المنتج من المفضلة",
+    "addedToWishlist": "تمت الإضافة إلى المفضلة",
+    "errorTogglingWishlist": "حدث خطأ أثناء تعديل المفضلة",
+    "errorAddingToCart": "حدث خطأ أثناء إضافة المنتج إلى السلة",
+    "error": "حدث خطأ",
+    "errorLoadingProducts": "حدث خطأ أثناء تحميل المنتجات",
+    "errorRemovingFromCart": "حدث خطأ أثناء إزالة المنتج من السلة"
+  },
+
+  "ratingsAndReviews": "التقييمات والمراجعات",
+  "reviews": "مراجعة",
+  "yourRating": "تقييمك",
+  "yourComment": "تعليقك",
+  "writeYourReview": "اكتب مراجعتك هنا...",
+  "submitReview": "إرسال المراجعة",
+  "submitting": "جاري الإرسال...",
+  "anonymous": "مستخدم",
+  "loginRequired": "يجب تسجيل الدخول لإضافة تقييم",
+  "errorLoadingRatings": "حدث خطأ أثناء تحميل التقييمات",
+  "errorSubmittingRating": "حدث خطأ أثناء إرسال التقييم",
+  "noRatings": "لا توجد تقييمات بعد",
+  
+  "alreadyRated":"لقد قمت بالتقييم مسبقا",
+ 
+  "youCanOnlyRateIfPurchased": "يمكنك تقييم المنتج فقط بعد الشراء.",
+  "rating": "التقييم",
+  "noReviewsYet": "لا توجد تقييمات حتى الآن"
+
 }

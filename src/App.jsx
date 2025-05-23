@@ -29,10 +29,11 @@ import NotFound from "./components/NotFound/notFound.jsx";
 import WishlistPage from "./components/wishList/wishList.jsx";
 import Chatbot from "./components/Chatbot/Chatbot.jsx";
 import { FaComments } from "react-icons/fa";
-import "./chatbot-animate.css"; // سنضيف هذا الملف للأنيميشن
+import "./chatbot-animate.css";
 import Tables from "./components/products/Tables.jsx";
 import Chairs from "./components/products/Chairs.jsx";
-
+import ProductsByTag from "./components/ProductByTags/ProductsByTag.jsx";
+import DesignProductByTag from "./components/ProductByTags/DesignProductByTag.jsx";
 const LayoutWithNavFooter = ({ children }) => (
   <>
     <Navbar style={"padding-top:50"}/>
@@ -61,7 +62,7 @@ function AppRoutes({
               <Tables />
             </LayoutWithoutNavFooter>}
         ></Route>
-        <Route path="/Chairs"
+        <Route path="/chairs"
         element={ 
         <LayoutWithoutNavFooter>
               <Chairs />
@@ -108,6 +109,12 @@ function AppRoutes({
               <Home />
             </LayoutWithNavFooter>
           }
+        />
+        <Route path="/products/tag/:tagName" 
+        element={
+        <LayoutWithNavFooter>
+              <DesignProductByTag />
+            </LayoutWithNavFooter>}
         />
         <Route
           path="/shop"

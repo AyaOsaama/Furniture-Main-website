@@ -34,5 +34,9 @@
   "fill_required_fields": "Please fill in all required address fields.",
   "order_failed": "Failed to place order. Please try again.",
   "paypal_transaction_success": "Transaction completed by",
-  "paypal_error": "An error occurred with PayPal payment."
+  "paypal_error": "An error occurred with PayPal payment.",
+  "checkout":"Checkout",
+  "state_region":"State Region",
+  "country":"Country",
+  "address":"Address"
 }

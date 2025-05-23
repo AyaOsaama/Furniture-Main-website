@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import RatingStars from "./RatingStars";
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
 import { FaEye, FaHeart, FaShoppingBag } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { addCartItem, fetchCart } from "../../redux/cartActions";
+import { addCartItem } from "../../redux/cartActions";
 import { toggleWishlistItem, fetchWishlist } from "../../redux/wishList";
 import { toast } from "react-toastify";
-import { api } from "../../axios/axios";
+
 
 const ProductGrid = ({
   hasLoaded,

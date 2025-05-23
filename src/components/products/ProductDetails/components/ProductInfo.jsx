@@ -1,12 +1,13 @@
-import React from 'react';
-import RatingStars from '../../RatingStars';
-import ProductTabs from './ProductTabs';
-import { useDispatch } from "react-redux";
+import React from "react";
+import RatingStars from "../../RatingStars";
+import { useDispatch, useSelector } from "react-redux";
 import { addCartItem } from "../../../../redux/cartActions";
+import { toggleWishlistItem } from "../../../../redux/wishList";
 import { useTranslation } from "react-i18next";
-import i18n from '../../../../i18n';
-import { useNavigate } from "react-router-dom"; // لو تستخدم react-router
+import i18n from "../../../../i18n";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { FiHeart } from "react-icons/fi";
 import "react-toastify/dist/ReactToastify.css";
 
 const ProductInfo = ({
@@ -16,38 +17,64 @@ const ProductInfo = ({
   handleQuantityChange,
   handleVariantChange,
   addToCart,
-  toggleWishlist,
-  isWishlisted
 }) => {
   const { t } = useTranslation("productdetails");
-  const currentLang = i18n.language; 
+  const currentLang = i18n.language;
   const variant = product.variants[selectedVariant];
   const maxQuantity = variant.inStock || 10;
   const dispatch = useDispatch();
   const navigate = useNavigate();
- const handleAddToCart = () => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    toast.error(t("productInfo.mustLoginFirst"));
-    navigate("/login");
-    return;
-  }
 
-  dispatch(addCartItem({ product, quantity }))
-    .unwrap()
-    .then(() => {
-      toast.success(t("productInfo.addedToCart"));
-    })
-    .catch((error) => {
-      toast.error(error.message || "Failed to add to cart");
-    });
-};
+  const { items: wishlistItems } = useSelector((state) => state.wishlist);
+  
+  // Check if this exact variant OR any variant of this product is in wishlist
+  const isWishlisted = wishlistItems.some(item => item._id === variant._id || item._id === product._id);
 
+  const handleAddToCart = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error(t("productInfo.mustLoginFirst"));
+      navigate("/login");
+      return;
+    }
+
+    dispatch(addCartItem({ product, quantity }))
+      .unwrap()
+      .then(() => {
+        toast.success(t("productInfo.addedToCart"));
+      })
+      .catch((error) => {
+        toast.error(error.message || "Failed to add to cart");
+      });
+  };
+
+  const handleWishlistClick = (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error(t("productInfo.mustLoginFirst"));
+      navigate("/login");
+      return;
+    }
+
+    dispatch(toggleWishlistItem(product._id))
+      .unwrap()
+      .then((result) => {
+        if (result.inWishlist) {
+          toast.success(t("productInfo.addedToWishlist"));
+        } else {
+          toast.success(t("productInfo.removedFromWishlist"));
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message || "Failed to update wishlist");
+      });
+  };
 
   return (
     <div className="md:w-1/2">
       <h1 className="text-2xl md:text-3xl font-bold mb-2">
-        {variant.name?.[currentLang] || t("productInfo.defaultName")} 
+        {variant.name?.[currentLang] || t("productInfo.defaultName")}
       </h1>
 
       <div className="flex items-center mb-4">
@@ -79,28 +106,29 @@ const ProductInfo = ({
                 className={`px-4 py-2 border rounded-full ${
                   selectedVariant === index
                     ? "bg-black text-white border-black"
-                    : "border-gray-300"
+                    : "border-gray-300 hover:border-gray-400"
                 }`}
               >
-                {v.color?.[currentLang] || t("productInfo.variant", { number: index + 1 })} {/* تعديل من en إلى currentLang */}
+                {v.color?.[currentLang] ||
+                  t("productInfo.variant", { number: index + 1 })}
               </button>
             ))}
           </div>
         </div>
       )}
 
-      <div className="flex gap-4">
-        <div className="flex items-center border border-gray-300">
+      <div className="flex gap-4 mb-4">
+        <div className="flex items-center border border-gray-300 rounded">
           <button
-            className="px-3 py-2 text-lg cursor-pointer"
+            className="px-3 py-2 text-lg hover:bg-gray-100 disabled:opacity-50"
             onClick={() => handleQuantityChange(-1)}
             disabled={quantity <= 1}
           >
             -
           </button>
-          <span className="px-4 py-2">{quantity}</span>
+          <span className="px-4 py-2 border-x border-gray-300">{quantity}</span>
           <button
-            className="px-3 py-2 text-lg cursor-pointer"
+            className="px-3 py-2 text-lg hover:bg-gray-100 disabled:opacity-50"
             onClick={() => handleQuantityChange(1)}
             disabled={quantity >= maxQuantity}
           >
@@ -108,87 +136,82 @@ const ProductInfo = ({
           </button>
         </div>
         <button
-  className="bg-black w-40 text-white py-3 px-6 cursor-pointer transition-colors"
-  onClick={() => handleAddToCart()} 
-  disabled={variant.inStock <= 0}
->
-  {variant.inStock > 0 ? t("productInfo.addToCart") : t("productInfo.outOfStock")}
-</button>
-      </div>
-
-      <div className="mt-4">
-        <button
-          onClick={toggleWishlist}
-          className={`py-3 flex items-start cursor-pointer gap-2 transition-colors ${
-            isWishlisted ? "text-red-600" : "border-none"
-          }`}
+          className="bg-black hover:bg-gray-800 w-40 text-white py-3 px-6 rounded transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+          onClick={handleAddToCart}
+          disabled={variant.inStock <= 0}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className={`h-6 w-6 transition-colors ${
-              isWishlisted
-                ? "text-red-600 fill-current"
-                : "text-gray-400 fill-none"
-            }`}
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={isWishlisted ? "0" : "2"}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-            />
-          </svg>
-          <span className={isWishlisted ? "text-red-600" : "text-gray-500"}>
-            {isWishlisted ? t("productInfo.wishlisted") : t("productInfo.addToWishlist")}
-          </span>
+          {variant.inStock > 0
+            ? t("productInfo.addToCart")
+            : t("productInfo.outOfStock")}
         </button>
       </div>
 
       <div className="mb-8">
-        <div className="mb-4 flex gap-2">
-          <h3 className="font-semibold">{t("productInfo.color")}:</h3>
-          <p className="text-gray-500">
-            {variant.color?.[currentLang] || t("productInfo.noColor")} {/* تعديل من en إلى currentLang */}
-          </p>
-        </div>
+        <button
+          onClick={handleWishlistClick}
+          className={`flex items-center gap-2 p-2 rounded-full transition-colors ${
+            isWishlisted
+              ? "text-red-500 hover:text-red-600"
+              : "text-gray-700 hover:text-black"
+          }`}
+        >
+          <FiHeart 
+            size={20} 
+            fill={isWishlisted ? "currentColor" : "none"} 
+            stroke="currentColor"
+            strokeWidth={isWishlisted ? 1.5 : 2}
+            className="transition-all duration-200"
+          />
+          <span className="text-sm font-medium">
+            {isWishlisted ? t("productInfo.wishlisted") : t("productInfo.addToWishlist")}
+          </span>
+        </button>
 
-        <div className="mb-4 flex gap-2">
-          <h3 className="font-semibold">{t("productInfo.material")}:</h3>
-          <p className="text-gray-500">
-            {product.material?.[currentLang] || t("productInfo.noMaterial")} {/* تعديل من en إلى currentLang */}
-          </p>
-        </div>
+        <div className="mt-6 space-y-3">
+          <div className="flex gap-2">
+            <h3 className="font-semibold">{t("productInfo.color")}:</h3>
+            <p className="text-gray-500">
+              {variant.color?.[currentLang] || t("productInfo.noColor")}
+            </p>
+          </div>
 
-        {product.categories?.sub?.tags &&
-          product.categories.sub.tags.length > 0 && (
-            <div className="mb-4">
-              <h3 className="font-semibold mb-2">Tags: </h3>
-              <div className="flex flex-wrap gap-2">
-                {product.categories.sub.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="bg-gray-100 hover:underline cursor-pointer transition-all duration-300 text-gray-800 text-sm px-3 py-1 capitalize font-medium rounded-full"
-                  >
-                    {tag}
-                  </span>
-                ))}
+          <div className="flex gap-2">
+            <h3 className="font-semibold">{t("productInfo.material")}:</h3>
+            <p className="text-gray-500">
+              {product.material?.[currentLang] || t("productInfo.noMaterial")}
+            </p>
+          </div>
+
+          {product.categories?.sub?.tags &&
+            product.categories.sub.tags.length > 0 && (
+              <div>
+                <h3 className="font-semibold mb-2">Tags: </h3>
+                <div className="flex flex-wrap gap-2">
+                  {product.categories.sub.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm px-3 py-1 capitalize font-medium rounded-full transition-colors"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-        <div className="mb-4 flex gap-2">
-          <h3 className="font-semibold">Availability: </h3>
-          <p className="text-gray-500">
-            {variant.inStock > 0
-              ? `In Stock (${variant.inStock} available)`
-              : t("productInfo.outOfStock")}
-          </p>
+          <div className="flex gap-2">
+            <h3 className="font-semibold">Availability: </h3>
+            <p className={`${
+              variant.inStock > 0 ? "text-green-600" : "text-red-600"
+            }`}>
+              {variant.inStock > 0
+                ? `${variant.inStock}`
+                : t("Out of stock")}
+            </p>
+          </div>
         </div>
 
-        <div>
-          <ProductTabs product={product} />
+        <div className="mt-6">
         </div>
       </div>
     </div>

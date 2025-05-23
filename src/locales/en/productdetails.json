@@ -2,21 +2,24 @@
   "loading": "Loading product...",
   "error": "Error: {{message}}",
   "backToProducts": "Back to Products",
+  "mustLoginFirst": "You must log in first",
 
   "productTabs": {
     "description": "Description",
-    "additional": "Additional",
-    "preview": "Preview",
+    "additional": "Show Ratings",
+    "preview": "ٌReviews",
     "noDescription": "No description available.",
-    "noAdditional": "No Additional Information",
-    "noPreview": "No preview available"
+    "noAdditional": "No Ratings",
+    "noPreview": "No preview available",
+    "mustLoginFirst": "You must log in first"
   },
 
   "relatedProducts": {
     "title": "Related Products",
     "noRelated": "No related products found...",
     "defaultAlt": "Related product",
-    "defaultName": "Product"
+    "defaultName": "Product",
+    "mustLoginFirst": "You must log in first"
   },
 
   "productInfo": {
@@ -32,7 +35,28 @@
     "noColor": "No color information available.",
     "material": "Material",
     "noMaterial": "No material information available.",
-      "mustLoginFirst": "You must log in first",
-  "addedToCart": "Added to cart successfully"
-  }
+    "mustLoginFirst": "You must log in first",
+    "addedToCart": "Added to cart successfully",
+    "removedFromWishlist": "Removed from wishlist",
+    "addedToWishlist": "Added to wishlist",
+    "errorTogglingWishlist": "Error toggling wishlist",
+    "errorAddingToCart": "Error adding product to cart",
+    "error": "Error",
+    "errorLoadingProducts": "Error loading products",
+    "errorRemovingFromCart": "Error removing product from cart"
+  },
+
+  "ratingsAndReviews": "Ratings & Reviews",
+  "reviews": "reviews",
+  "yourRating": "Your Rating",
+  "yourComment": "Your Comment",
+  "writeYourReview": "Write your review here...",
+  "submitReview": "Submit Review",
+  "submitting": "Submitting...",
+  "anonymous": "User",
+  "loginRequired": "Please login to add a rating",
+  "errorLoadingRatings": "Error loading ratings",
+  "errorSubmittingRating": "Error submitting rating",
+  "youCanOnlyRateIfPurchased":"You CanOnly Rate If Purchased",
+  "alreadyRated":"Already Rated"
 }
