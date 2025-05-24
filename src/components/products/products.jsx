@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useProducts } from "../utils/useProducts";
 import ProductGrid from "./ProductGrid";
 import FilterSidebar from "./FilterSidebar";
@@ -6,13 +6,15 @@ import SortDropdown from "./SortDropdown";
 import PaginationControls from "./PaginationControls";
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
+import React, { useEffect } from "react";
 
 const Products = () => {
+ 
+
   const { t } = useTranslation("products");
   const currentLang = i18n.language;
 
   const {
-    // variants,
     currentVariants,
     currentPage,
     totalPages,
@@ -29,8 +31,6 @@ const Products = () => {
     calculatePosition,
     applyPriceFilter,
     resetFilters,
-    // sortOption,
-    // setSortOption,
     setCurrentPage,
     categories,
     colorOptions,
@@ -62,6 +62,15 @@ const Products = () => {
     (a, b) => b.rating - a.rating
   );
 
+  // تغليف دالة handleCategoryChange لإضافة console.log
+  const handleCategoryChangeWithLog = (categoryId) => {
+    console.log("Clicked category id:", categoryId);
+    console.log("Current selectedCategories before change:", selectedCategories);
+    handleCategoryChange(categoryId);
+  };
+ useEffect(() => {
+  console.log("selectedCategories updated:", selectedCategories);
+}, [selectedCategories]);
   return (
     <div className="flex flex-col-reverse lg:flex-row mx-20 my-15 gap-8 mt-10 p-8">
       {/* Products section */}
@@ -105,7 +114,7 @@ const Products = () => {
         setSearchTerm={setSearchTerm}
         categories={categories}
         selectedCategories={selectedCategories}
-        handleCategoryChange={handleCategoryChange}
+        handleCategoryChange={handleCategoryChangeWithLog} 
         colorOptions={colorOptions}
         selectedColors={selectedColors}
         handleColorChange={handleColorChange}

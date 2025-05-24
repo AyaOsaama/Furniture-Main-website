@@ -9,8 +9,8 @@ import { toast } from "react-toastify";
 function WishlistPage() {
   const dispatch = useDispatch();
   const wishlistItems = useSelector((state) => state.wishlist?.items || []);
-  const loading = useSelector((state) => state.wishlist?.loading || false);
-  const error = useSelector((state) => state.wishlist?.error || null);
+  const loading = useSelector((state) => state.wishlist.loading);
+  const error = useSelector((state) => state.wishlist.error);
   const { t, i18n } = useTranslation("wishlist");
   const currentLang = i18n.language;
 
@@ -19,11 +19,6 @@ function WishlistPage() {
   }, [dispatch]);
 
   const handleRemoveFromWishlist = async (productId) => {
-    if (!productId) {
-      toast.error(t("error"));
-      return;
-    }
-
     try {
       await dispatch(toggleWishlistItem(productId)).unwrap();
       toast.success(t("removed"));
@@ -33,13 +28,13 @@ function WishlistPage() {
   };
 
   const handleAddToCart = async (product) => {
-    if (!product?._id || !product?.variants?.[0]) {
-      toast.error(t("cart.noVariant"));
-      return;
-    }
-
     try {
       const variant = product.variants[0];
+      if (!variant) {
+        toast.error(t("cart.noVariant"));
+        return;
+      }
+
       await dispatch(
         addCartItem({
           product: {
@@ -107,67 +102,62 @@ function WishlistPage() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mx-10 px-5">
-          {wishlistItems.map((product) => {
-            if (!product?._id || !product?.variants?.[0]) return null;
-            
-            const variant = product.variants[0];
-            return (
-              <div
-                key={product._id}
-                className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1"
-              >
-                <div className="relative">
-                  {variant.image && (
-                    <img
-                      src={variant.image}
-                      alt={product.description?.[currentLang] || "Product"}
-                      className="w-full h-48 object-cover"
-                    />
-                  )}
-                  {product.brand && (
-                    <div className="absolute top-2 right-2">
-                      <span className="bg-green-500 text-white px-2 py-1 rounded-full text-xs">
-                        {product.brand}
-                      </span>
-                    </div>
-                  )}
-                  <button
-                    onClick={() => handleRemoveFromWishlist(product._id)}
-                    className="absolute top-2 left-2 bg-white p-2 rounded-full hover:bg-red-50 transition-colors"
-                    title={t("remove")}
-                  >
-                    <FaHeart className="text-red-500 text-xl" />
-                  </button>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mx-10">
+          {wishlistItems.map((product) => (
+            <div
+              key={product._id}
+              className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1"
+            >
+              <div className="relative">
+                {product.variants?.[0]?.image && (
+                  <img
+                    src={product.variants[0].image}
+                    alt={product.description?.[currentLang] || "Product"}
+                    className="w-full h-48 object-cover"
+                  />
+                )}
+                <div className="absolute top-2 right-2">
+                  <span className="bg-green-500 text-white px-2 py-1 rounded-full text-xs">
+                    {product.brand}
+                  </span>
                 </div>
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                    {variant.name?.[currentLang] || "No title"}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4">
-                    {t("material")}: {product.material?.[currentLang] || "N/A"}
-                  </p>
+                <button
+                  onClick={() => handleRemoveFromWishlist(product._id)}
+                  className="absolute top-2 left-2 bg-white p-2 rounded-full hover:bg-red-50 transition-colors"
+                  title={t("remove")}
+                >
+                  <FaHeart className="text-red-500 text-xl" />
+                </button>
+              </div>
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  {product.variants[0].name?.[currentLang] || "No title"}
+                </h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  {t("material")}: {product.material?.[currentLang] || "N/A"}
+                </p>
+                {product.variants?.[0] && (
                   <div className="flex justify-between items-center mb-4">
                     <span className="text-lg font-bold text-gray-900">
-                      ${variant.price?.toFixed(2) || "0.00"}
+                      ${product.variants[0].price?.toFixed(2) || "0.00"}
                     </span>
-                    {variant.discountPrice && (
+                    {product.variants[0].discountPrice && (
                       <span className="text-sm text-gray-500 line-through">
-                        ${variant.discountPrice.toFixed(2)}
+                        ${product.variants[0].discountPrice.toFixed(2)}
                       </span>
                     )}
                   </div>
-                  <button
-                    onClick={() => handleAddToCart(product)}
-                    className="w-full bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500 transition-colors flex items-center justify-center gap-2"
-                  >
-                    <FaShoppingCart />
-                    {t("cart.add")}
-                  </button>
-                </div>
+                )}
+                <button
+                  onClick={() => handleAddToCart(product)}
+                  className="w-full bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500 transition-colors flex items-center justify-center gap-2"
+                >
+                  <FaShoppingCart />
+                  {t("cart.add")}
+                </button>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       )}
     </div>

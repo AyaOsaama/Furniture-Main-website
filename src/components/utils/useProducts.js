@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { fetchAllCategories, fetchAllProducts } from "../../api";
 import i18n from "../../i18n";
+
 const PRODUCTS_PER_PAGE = 6;
 
 export const useProducts = () => {
@@ -24,21 +25,25 @@ export const useProducts = () => {
     const loadProducts = async () => {
       try {
         const data = await fetchAllProducts();
-        const allVariants = data.products.flatMap((product) =>
-          product.variants.map((variant) => ({
+
+        const allVariants = data.products.flatMap((product) => {
+          const mainCategoryId = product.category?.main?._id;
+          const subCategoryId = product.category?._id;
+
+          return product.variants.map((variant) => ({
             ...variant,
             productId: product._id,
-            categoryId: product.category?._id,
-          }))
-        );
+            categoryMainId: mainCategoryId,
+            categorySubId: subCategoryId,
+          }));
+        });
 
         setVariants(allVariants);
 
-        // Process color options
         const colorCounts = {};
         allVariants.forEach((variant) => {
           if (variant.color?.[currentLang]) {
-            const colorName = variant.color?.[currentLang].toLowerCase();
+            const colorName = variant.color[currentLang].toLowerCase();
             colorCounts[colorName] = (colorCounts[colorName] || 0) + 1;
           }
         });
@@ -53,7 +58,6 @@ export const useProducts = () => {
 
         setColorOptions(colorsWithCounts.sort((a, b) => a.name.localeCompare(b.name)));
 
-        // Set price range
         const prices = allVariants.map((v) => v.price || 0);
         const minPrice = Math.floor(Math.min(...prices));
         const maxPrice = Math.ceil(Math.max(...prices));
@@ -70,7 +74,6 @@ export const useProducts = () => {
     loadProducts();
   }, []);
 
-  // fetch Categories Data
   useEffect(() => {
     const getCategories = async () => {
       try {
@@ -85,7 +88,6 @@ export const useProducts = () => {
     getCategories();
   }, []);
 
-  // Sort products
   const sortVariants = useCallback(
     (variants) => {
       return [...variants].sort((a, b) => {
@@ -111,24 +113,23 @@ export const useProducts = () => {
     [sortOption]
   );
 
-  // Filter products
   const filteredVariants = sortVariants(
     variants.filter((variant) => {
-      const matchesSearch = (variant.name?.[currentLang]|| "")
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+      const matchesSearch =
+        (variant.name?.[currentLang] || "").toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesColor =
         selectedColors.length === 0 ||
-        (variant.color?.[currentLang]&&
-          selectedColors.includes(variant.color?.[currentLang].toLowerCase()));
+        (variant.color?.[currentLang] &&
+          selectedColors.includes(variant.color[currentLang].toLowerCase()));
 
       const matchesPrice =
         variant.price >= sliderValues.min && variant.price <= sliderValues.max;
 
       const matchesCategory =
         selectedCategories.length === 0 ||
-        (variant.categoryId && selectedCategories.includes(variant.categoryId));
+        selectedCategories.includes(variant.categoryMainId) ||
+        selectedCategories.includes(variant.categorySubId);
 
       const matchesRating =
         selectedRatings.length === 0 ||
@@ -142,13 +143,11 @@ export const useProducts = () => {
     })
   );
 
-  // Pagination
   const totalPages = Math.ceil(filteredVariants.length / PRODUCTS_PER_PAGE);
   const indexOfLast = currentPage * PRODUCTS_PER_PAGE;
   const indexOfFirst = indexOfLast - PRODUCTS_PER_PAGE;
   const currentVariants = filteredVariants.slice(indexOfFirst, indexOfLast);
 
-  // Color filter handler
   const handleColorChange = (colorName) => {
     setSelectedColors((prev) =>
       prev.includes(colorName)
@@ -158,7 +157,6 @@ export const useProducts = () => {
     setCurrentPage(1);
   };
 
-  // Category filter handler
   const handleCategoryChange = (categoryId) => {
     setSelectedCategories((prev) =>
       prev.includes(categoryId)
@@ -168,17 +166,13 @@ export const useProducts = () => {
     setCurrentPage(1);
   };
 
-  // Rating filter handler
   const handleRatingChange = (rating) => {
     setSelectedRatings((prev) =>
-      prev.includes(rating)
-        ? prev.filter((r) => r !== rating)
-        : [...prev, rating]
+      prev.includes(rating) ? prev.filter((r) => r !== rating) : [...prev, rating]
     );
     setCurrentPage(1);
   };
 
-  // Slider handlers
   const calculatePosition = (value) => {
     const range = priceRange.max - priceRange.min;
     return ((value - priceRange.min) / range) * 100;

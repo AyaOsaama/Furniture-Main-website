@@ -22,7 +22,11 @@ const CategoryFilter = ({
                   type="checkbox"
                   id={`category-${category._id}`}
                   checked={selectedCategories.includes(category._id)}
-                  onChange={() => handleCategoryChange(category._id)}
+                  onChange={() => {
+                    console.log("Clicked category id:", category._id);
+                    console.log("Current selectedCategories:", selectedCategories);
+                    handleCategoryChange(category._id);
+                  }}
                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                 />
                 <label
@@ -52,7 +56,11 @@ const CategoryFilter = ({
                         type="checkbox"
                         id={`category-${category._id}`}
                         checked={selectedCategories.includes(category._id)}
-                        onChange={() => handleCategoryChange(category._id)}
+                        onChange={() => {
+                          console.log("Clicked category id:", category._id);
+                          console.log("Current selectedCategories:", selectedCategories);
+                          handleCategoryChange(category._id);
+                        }}
                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                       />
                       <label

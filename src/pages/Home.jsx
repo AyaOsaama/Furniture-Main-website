@@ -62,7 +62,7 @@ function Home() {
       title: t("contemporaryLamps"),
       image: Contemporarylamps,
       description: t("contemporaryLampsDesc"),
-      tag: "storge" 
+      tag: "storage" 
 
     },
   ];

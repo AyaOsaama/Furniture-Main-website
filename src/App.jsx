@@ -30,8 +30,6 @@ import WishlistPage from "./components/wishList/wishList.jsx";
 import Chatbot from "./components/Chatbot/Chatbot.jsx";
 import { FaComments } from "react-icons/fa";
 import "./chatbot-animate.css";
-import Tables from "./components/products/Tables.jsx";
-import Chairs from "./components/products/Chairs.jsx";
 import DesignProductByTag from "./components/ProductByTags/DesignProductByTag.jsx";
 import { ProductsByTagProvider } from './contexts/ProductsByTagContext';
 
@@ -57,18 +55,7 @@ function AppRoutes({
     <>
       <Routes>
         {/* Routes without Navbar/Footer */}
-        <Route path="/tables"
-        element={ 
-        <LayoutWithoutNavFooter>
-              <Tables />
-            </LayoutWithoutNavFooter>}
-        ></Route>
-        <Route path="/chairs"
-        element={ 
-        <LayoutWithoutNavFooter>
-              <Chairs />
-            </LayoutWithoutNavFooter>}
-        ></Route>
+      
         <Route
           path="/checkout"
           element={
