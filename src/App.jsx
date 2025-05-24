@@ -32,8 +32,9 @@ import { FaComments } from "react-icons/fa";
 import "./chatbot-animate.css";
 import Tables from "./components/products/Tables.jsx";
 import Chairs from "./components/products/Chairs.jsx";
-import ProductsByTag from "./components/ProductByTags/ProductsByTag.jsx";
 import DesignProductByTag from "./components/ProductByTags/DesignProductByTag.jsx";
+import { ProductsByTagProvider } from './contexts/ProductsByTagContext';
+
 const LayoutWithNavFooter = ({ children }) => (
   <>
     <Navbar style={"padding-top:50"}/>
@@ -271,7 +272,7 @@ function App() {
   };
 
   return (
-    <>
+    <ProductsByTagProvider>
       <Toaster position="top-right" reverseOrder={false} />
       <ToastContainer position="top-right" autoClose={3000} />
       <SearchProvider>
@@ -284,7 +285,7 @@ function App() {
           />
         </BrowserRouter>
       </SearchProvider>
-    </>
+    </ProductsByTagProvider>
   );
 }
 

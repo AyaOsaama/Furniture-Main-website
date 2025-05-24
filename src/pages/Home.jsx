@@ -8,8 +8,6 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import PaymentOutlinedIcon from "@mui/icons-material/PaymentOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
-import officeOne from "../assets/images/office_one.png";
-import officeTwo from "../assets/images/office_two.png";
 import coverOne from "../assets/images/c1.png";
 import coverTwo from "../assets/images/c2.jpg";
 import coverThree from "../assets/images/c3.jpg";

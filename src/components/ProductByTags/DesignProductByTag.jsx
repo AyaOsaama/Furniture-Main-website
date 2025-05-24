@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { useProducts } from "../utils/useProducts";
+import { useProductsByTag } from "./useProductsByTag";
 import ProductsByTag from "./ProductsByTag";
 import FilterSidebar from "../products/FilterSidebar";
 import SortDropdown from "../products/SortDropdown";
 import PaginationControls from "../products/PaginationControls";
 import { useTranslation } from "react-i18next";
-import i18n from "../../i18n";
+import { useParams } from "react-router-dom";
 
 const DesignProductByTag = () => {
   const { t } = useTranslation("products");
-  const currentLang = i18n.language;
+  const { tagName } = useParams();
 
   const {
-    // variants,
     currentVariants,
     currentPage,
     totalPages,
@@ -29,66 +27,33 @@ const DesignProductByTag = () => {
     calculatePosition,
     applyPriceFilter,
     resetFilters,
-    // sortOption,
-    // setSortOption,
+    selectedRatings,
+    handleRatingChange,
     setCurrentPage,
     categories,
     colorOptions,
-    selectedRatings,
-    handleRatingChange,
-  } = useProducts();
-
-  const [selectedRatingFilters, setSelectedRatingFilters] = useState([]);
-
-  // دالة تغيير التقييمات المختارة
-  const handleRatingFilterChange = (rating) => {
-    setSelectedRatingFilters((prev) =>
-      prev.includes(rating)
-        ? prev.filter((r) => r !== rating)
-        : [...prev, rating]
-    );
-  };
-
-  // فلترة المنتجات حسب التقييم المختار
-  const filteredProductsByRating =
-    selectedRatingFilters.length === 0
-      ? currentVariants
-      : currentVariants.filter((product) =>
-          selectedRatingFilters.includes(Math.round(product.rating))
-        );
-
-  // ترتيب المنتجات حسب التقييم من الأعلى للأقل
-  const sortedProducts = [...filteredProductsByRating].sort(
-    (a, b) => b.rating - a.rating
-  );
-
-  const filteredProducts = searchTerm.trim() === ""
-    ? currentVariants
-    : currentVariants.filter(product => {
-        const variant = product.variants?.[0];
-        if (!variant) return false;
-        return (
-          variant.name?.ar?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          variant.name?.en?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.description?.ar?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.description?.en?.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      });
-
+    sortOption,
+    setSortOption,
+  } = useProductsByTag({ tagName });
+  console.log("hasLoaded:", hasLoaded);
+  console.log("filteredVariants:", filteredVariants);
+  console.log("currentVariants:", currentVariants);
   return (
     <div className="flex flex-col-reverse lg:flex-row mx-20 my-15 gap-8 mt-10 p-8">
-      {/* Products section */}
       <div className="lg:w-3/4 w-full mt-10">
-        {/* Product count and sort */}
         {hasLoaded && filteredVariants.length > 0 && (
           <div className="flex md:flex-row flex-col md:gap-0 gap-4 justify-between items-center mb-4">
-            <div className="text-gray-500 lg:text-lg text-sm ">
+            <div className="text-gray-500 lg:text-lg text-sm">
               {t("showingProducts", {
                 current: currentVariants.length,
                 total: filteredVariants.length,
               })}
             </div>
+
+            {/* Sort dropdown */}
             <SortDropdown
+              sortOption={sortOption}
+              setSortOption={setSortOption}
               selectedRatings={selectedRatings}
               handleRatingChange={handleRatingChange}
             />
@@ -97,12 +62,11 @@ const DesignProductByTag = () => {
 
         <ProductsByTag
           hasLoaded={hasLoaded}
-          currentVariants={filteredProducts}
+          currentVariants={currentVariants}
           filteredVariants={filteredVariants}
           resetFilters={resetFilters}
         />
 
-        {/* Pagination */}
         {hasLoaded && filteredVariants.length > 0 && totalPages > 1 && (
           <PaginationControls
             currentPage={currentPage}
@@ -112,7 +76,6 @@ const DesignProductByTag = () => {
         )}
       </div>
 
-      {/* Filters section */}
       <FilterSidebar
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}

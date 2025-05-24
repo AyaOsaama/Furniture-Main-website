@@ -1,0 +1,22 @@
+{
+  "common": {
+    "search": "Search products..."
+  },
+  "filters": {
+    "title": "Filters",
+    "reset": "Reset",
+    "categories": "Categories",
+    "colors": "Colors",
+    "priceRange": "Price Range",
+    "apply": "Apply"
+  },
+  "sort": {
+    "default": "Default",
+    "priceAsc": "Price: Low to High",
+    "priceDesc": "Price: High to Low",
+    "nameAsc": "Name: A to Z",
+    "nameDesc": "Name: Z to A",
+    "star": "Star",
+    "stars": "Stars"
+  }
+} 
