@@ -29,6 +29,9 @@
     "error":"حدث خطأ",
     "errorLoadingProducts":"حدث خطأ أثناء تحميل المنتجات",
     "addedToCart":"تم إضافة المنتج إلى السلة",
-    "errorRemovingFromCart":"حدث خطأ أثناء إزالة المنتج من السلة"
+    "errorRemovingFromCart":"حدث خطأ أثناء إزالة المنتج من السلة",
+   "relatedProductsByTag": "منتجات ذات صلة :",
+  "noProductsFound": "لم يتم العثور على منتجات",
+    "loading":"تحميل"
 
 }

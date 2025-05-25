@@ -67,6 +67,7 @@ const DesignProductByTag = () => {
           currentVariants={currentVariants}
           filteredVariants={filteredVariants}
           resetFilters={resetFilters}
+          tag={tagName} 
         />
  
         {hasLoaded && filteredVariants.length > 0 && totalPages > 1 && (

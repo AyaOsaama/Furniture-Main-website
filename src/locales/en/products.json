@@ -28,7 +28,10 @@
     "error":"Error",
     "errorLoadingProducts":"Error loading products",
     "addedToCart":"Product added to cart",
-    "errorRemovingFromCart":"Error removing product from cart"
+    "errorRemovingFromCart":"Error removing product from cart",
+     "relatedProductsByTag": "Related Products :",
+  "noProductsFound": "No products found",
+  "loading": "Loading"
 
 
 }
