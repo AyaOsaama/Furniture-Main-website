@@ -29,9 +29,10 @@ import NotFound from "./components/NotFound/notFound.jsx";
 import WishlistPage from "./components/wishList/wishList.jsx";
 import Chatbot from "./components/Chatbot/Chatbot.jsx";
 import { FaComments } from "react-icons/fa";
-import "./chatbot-animate.css"; // سنضيف هذا الملف للأنيميشن
-import Tables from "./components/products/Tables.jsx";
-import Chairs from "./components/products/Chairs.jsx";
+import "./chatbot-animate.css";
+import DesignProductByTag from "./components/ProductByTags/DesignProductByTag.jsx";
+import { ProductsByTagProvider } from './contexts/ProductsByTagContext';
+import { fetchWishlist } from "./redux/wishList.js";
 
 const LayoutWithNavFooter = ({ children }) => (
   <>
@@ -55,18 +56,7 @@ function AppRoutes({
     <>
       <Routes>
         {/* Routes without Navbar/Footer */}
-        <Route path="/tables"
-        element={ 
-        <LayoutWithoutNavFooter>
-              <Tables />
-            </LayoutWithoutNavFooter>}
-        ></Route>
-        <Route path="/Chairs"
-        element={ 
-        <LayoutWithoutNavFooter>
-              <Chairs />
-            </LayoutWithoutNavFooter>}
-        ></Route>
+      
         <Route
           path="/checkout"
           element={
@@ -108,6 +98,12 @@ function AppRoutes({
               <Home />
             </LayoutWithNavFooter>
           }
+        />
+        <Route path="/products/tag/:tagName" 
+        element={
+        <LayoutWithNavFooter>
+              <DesignProductByTag />
+            </LayoutWithNavFooter>}
         />
         <Route
           path="/shop"
@@ -248,6 +244,7 @@ function App() {
     const userId = userData?.id;
     if (userId) {
       dispatch(fetchCart(userId));
+         dispatch(fetchWishlist());
     }
   }, [dispatch]);
 
@@ -264,7 +261,7 @@ function App() {
   };
 
   return (
-    <>
+    <ProductsByTagProvider>
       <Toaster position="top-right" reverseOrder={false} />
       <ToastContainer position="top-right" autoClose={3000} />
       <SearchProvider>
@@ -277,7 +274,7 @@ function App() {
           />
         </BrowserRouter>
       </SearchProvider>
-    </>
+    </ProductsByTagProvider>
   );
 }
 

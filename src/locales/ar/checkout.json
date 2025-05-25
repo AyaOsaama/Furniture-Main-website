@@ -34,5 +34,9 @@
   "fill_required_fields": "يرجى تعبئة جميع الحقول المطلوبة.",
   "order_failed": "فشل في تقديم الطلب. يرجى المحاولة مرة أخرى.",
   "paypal_transaction_success": "تمت المعاملة بواسطة",
-  "paypal_error": "حدث خطأ أثناء الدفع عبر باي بال."
+  "paypal_error": "حدث خطأ أثناء الدفع عبر باي بال.",
+  "checkout":"إتمام الشراء",
+  "state_region":"المنطقة",
+  "country":"الدولة",
+  "address":"العنوان"
 }

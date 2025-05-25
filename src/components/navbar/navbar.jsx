@@ -8,7 +8,6 @@ import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { SearchContext } from "../../searchContext/SearchContext.jsx";
 import { Link } from "react-router-dom";
-
 function Navbar() {
   const { t, i18n } = useTranslation("navbar");
   const cartItemsCount = useSelector((state) => state.cart.items.length);
@@ -31,7 +30,8 @@ function Navbar() {
     { href: "/", label: t("home") },
     { href: "/shop", label: t("shop") },
     { href: "/blog", label: t("blog") },
-    { href: "/about", label: t("about") },
+ { href: "/products/tag/sale", label: t("sale") },
+     { href: "/about", label: t("about") },
     { href: "/contactus", label: t("contact") },
   ];
 
@@ -40,7 +40,7 @@ function Navbar() {
     setShowLangMenu(false);
   };
 
-  const hideSearchOn = ["/shop", "/contactus", "/blog"];
+  const hideSearchOn = ["/shop","/products/tag/sale" ,"/contactus", "/blog"];
   const shouldHideSearchIcon = hideSearchOn.includes(pathname);
 
   useEffect(() => {
@@ -133,7 +133,7 @@ function Navbar() {
               className="text-2xl font-semibold cursor-pointer"
               onClick={() => navigate("/")}
             >
-              FurniITI
+              ℂ𝑜𝓏𝘺𝐾𝓪𝕣𝘵
             </button>
           </div>
 
@@ -321,7 +321,7 @@ function Navbar() {
               className="text-xl font-semibold cursor-pointer ml-1"
               onClick={() => navigate("/")}
             >
-              FurniITI
+              ℂ𝑜𝓏𝘺𝐾𝓪𝕣𝘵
             </button>
           </div>
 

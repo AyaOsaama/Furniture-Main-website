@@ -12,5 +12,6 @@
   "date": "Date",
   "price": "Price",
   "quantity": "Quantity",
-  "back": "Back"
+  "back": "Back",
+  "shippingDetails": "Shipping Details"
 }

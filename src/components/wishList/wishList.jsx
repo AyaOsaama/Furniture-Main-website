@@ -67,8 +67,8 @@ function WishlistPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-10 mt-10">
-      <div className="text-center mb-12">
+    <div className="container mx-auto px-4 py-10 !mt-10">
+      <div className="text-center mb-12 mt-10 ">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">
           {t("title")}
         </h1>
@@ -102,7 +102,7 @@ function WishlistPage() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mx-10">
           {wishlistItems.map((product) => (
             <div
               key={product._id}

@@ -4,6 +4,7 @@ import { useAuth } from "../../contextAuth/AuthContext";
 import { toast } from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import background from "../SignUp/assets/background.png";
+import { api } from "../../axios/axios"; // ✅ axios instance
 
 const ProfileForm = () => {
   const { t } = useTranslation("profileuser");
@@ -14,31 +15,23 @@ const ProfileForm = () => {
   const { user: authUser, logout } = useAuth();
   const navigate = useNavigate();
 
-  const token = localStorage.getItem("token");
-
   const fetchUserById = async (id) => {
     try {
-      const res = await fetch(`http://localhost:3000/users/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (res.status === 403 || res.status === 401) {
-        toast.error(t("unauthorizedAccess"));
-        logout();
-        navigate("/login");
-        return;
-      }
-
-      const data = await res.json();
+      const { data } = await api.get(`/users/${id}`);
       setUser(data.user);
       setPreview(data.user.image);
     } catch (err) {
       toast.error(t("failedFetchUser"));
+
+      if (err.response?.status === 401 || err.response?.status === 403) {
+        logout();
+        navigate("/login");
+      }
     }
   };
 
   useEffect(() => {
-    const localUser = JSON.parse(localStorage.getItem("user"));
+    const localUser = JSON.parse(localStorage.getItem("user") || "{}");
     if (!localUser?.id) {
       navigate("/login");
     } else {
@@ -60,40 +53,25 @@ const ProfileForm = () => {
     e.preventDefault();
 
     const formData = new FormData();
-
-    if (user.userName)
-      formData.append("userName", JSON.stringify(user.userName));
+    if (user.userName) formData.append("userName", JSON.stringify(user.userName));
     if (user.address) formData.append("address", JSON.stringify(user.address));
     if (user.phone) formData.append("phone", user.phone);
     if (imageFile) formData.append("image", imageFile);
 
     try {
-      const res = await fetch(`http://localhost:3000/users/me`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
+      const { data } = await api.patch(`/users/me`, formData);
 
-      if (res.status === 401 || res.status === 403) {
+      toast.success(data.message);
+      await fetchUserById(user._id || user.id);
+      localStorage.setItem("user", JSON.stringify(data.user));
+    } catch (error) {
+      if (error.response?.status === 401 || error.response?.status === 403) {
         toast.error(t("unauthorizedLoginAgain"));
         logout();
         navigate("/login");
-        return;
-      }
-
-      const data = await res.json();
-
-      if (res.ok) {
-        toast.success(data.message);
-        await fetchUserById(user._id || user.id);
-        localStorage.setItem("user", JSON.stringify(data.user));
       } else {
-        toast.error(data.message || t("updateFailed"));
+        toast.error(t("somethingWentWrong"));
       }
-    } catch (error) {
-      toast.error(t("somethingWentWrong"));
     }
   };
 

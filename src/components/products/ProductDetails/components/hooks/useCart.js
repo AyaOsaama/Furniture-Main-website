@@ -1,31 +1,19 @@
-import { useState, useEffect } from "react";
-import { api } from "../../../../../axios/axios";
-import { useDispatch, useSelector } from "react-redux";
-import { toggleWishlistItem } from "../../../../../redux/wishList";
+import { useState, useEffect } from 'react';
 
 const useCart = (product, selectedVariant) => {
-  const dispatch = useDispatch();
-  const wishlist = useSelector((state) => state.wishlist?.items || []);
   const [quantity, setQuantity] = useState(1);
   const [cart, setCart] = useState([]);
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   // Load cart from localStorage
   useEffect(() => {
-    const savedCart = localStorage.getItem("cart");
+    const savedCart = localStorage.getItem('cart');
     if (savedCart) setCart(JSON.parse(savedCart));
   }, []);
 
-  // Check if product is in wishlist
-  useEffect(() => {
-    if (product) {
-      setIsWishlisted(wishlist.includes(product._id));
-    }
-  }, [product, wishlist]);
-
   // Save cart to localStorage
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
+    localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
   const handleQuantityChange = (change) => {
@@ -41,7 +29,7 @@ const useCart = (product, selectedVariant) => {
 
     const variant = product.variants[selectedVariant];
     const existingItemIndex = cart.findIndex(
-      (item) => item.productId === product._id && item.variantId === variant._id
+      item => item.productId === product._id && item.variantId === variant._id
     );
 
     if (existingItemIndex >= 0) {
@@ -64,20 +52,8 @@ const useCart = (product, selectedVariant) => {
     }
   };
 
-  const toggleWishlist = async () => {
-    if (!product) return;
-
-    try {
-      // Update local state for immediate UI feedback
-      setIsWishlisted(!isWishlisted);
-
-      // Update Redux state
-      await dispatch(toggleWishlistItem(product._id)).unwrap();
-    } catch (error) {
-      console.error("Error toggling wishlist:", error);
-      // Revert changes if request fails
-      setIsWishlisted(isWishlisted);
-    }
+  const toggleWishlist = () => {
+    setIsWishlisted(!isWishlisted);
   };
 
   return {
@@ -85,7 +61,7 @@ const useCart = (product, selectedVariant) => {
     handleQuantityChange,
     addToCart,
     toggleWishlist,
-    isWishlisted,
+    isWishlisted
   };
 };
 

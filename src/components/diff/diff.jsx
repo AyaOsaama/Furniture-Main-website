@@ -10,7 +10,7 @@ function Diff() {
               color: "white",
             }}
           >
-            FurniITI
+            ℂ𝑜𝓏𝘺𝐾𝓪𝕣𝘵
           </div>
         </div>
         <div className="diff-item-2" role="img">
@@ -21,7 +21,7 @@ function Diff() {
               color: "#000000",
             }}
           >
-            FurniITI
+            ℂ𝑜𝓏𝘺𝐾𝓪𝕣𝘵
           </div>
         </div>
         <div className="diff-resizer"></div>

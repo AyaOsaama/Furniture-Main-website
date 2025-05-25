@@ -17,7 +17,21 @@
     "colors.more": "{{count}} more colors",
      "price.title": "Price",
     "price.range": "Price ${{min}} - ${{max}}",
-    "price.button": "Filter"
+    "price.button": "Filter",
+    "Products Filters":"Products Filters",
+    "outOfStock":"Product is out of stock",
+    "loginRequired":"Login required first to add products to cart",
+    "removedFromWishlist":"Product removed from wishlist",
+    "addedToWishlist":"Product added to wishlist",
+    "errorTogglingWishlist":"Error toggling wishlist",
+    "errorAddingToCart":"Error adding product to cart",
+    "error":"Error",
+    "errorLoadingProducts":"Error loading products",
+    "addedToCart":"Product added to cart",
+    "errorRemovingFromCart":"Error removing product from cart",
+     "relatedProductsByTag": "Related Products :",
+  "noProductsFound": "No products found",
+  "loading": "Loading"
 
 
 }

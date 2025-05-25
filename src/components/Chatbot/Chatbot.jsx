@@ -3,7 +3,7 @@ import { askBot } from "../../axios/openai";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
-import { IoClose } from "react-icons/io5"; // أيقونة إغلاق
+import { IoClose } from "react-icons/io5"; 
 
 export default function Chatbot({ onClose }) {
   const [input, setInput] = useState("");

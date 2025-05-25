@@ -10,7 +10,6 @@ export const fetchWishlist = createAsyncThunk(
       if (!token) return [];
 
       const response = await api.get("/whishlist");
-      console.log("Wishlist response:", response.data);
       
       // Check if the response already contains full product details
       if (response.data.wishlist && response.data.wishlist.length > 0) {
@@ -54,7 +53,6 @@ export const toggleWishlistItem = createAsyncThunk(
       }
 
       const response = await api.post("/whishlist/toggle", { productId });
-      console.log("Toggle response:", response.data);
 
       // If adding to wishlist, fetch the product details
       if (response.data.inWishlist) {
@@ -100,7 +98,6 @@ const wishlistSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchWishlist.fulfilled, (state, action) => {
-        console.log("Setting wishlist items:", action.payload);
         state.items = action.payload;
         state.loading = false;
       })
@@ -114,7 +111,6 @@ const wishlistSlice = createSlice({
         state.error = null;
       })
       .addCase(toggleWishlistItem.fulfilled, (state, action) => {
-        console.log("Updating wishlist after toggle:", action.payload);
         if (action.payload.inWishlist) {
           // Add product to wishlist
           state.items.push(action.payload.productDetails);

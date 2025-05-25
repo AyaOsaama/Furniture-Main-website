@@ -1,8 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { fetchAllCategories, fetchAllProducts } from "../../api";
 import i18n from "../../i18n";
+import { api } from "../../axios/axios"; // إضافة استيراد api
+ 
 const PRODUCTS_PER_PAGE = 6;
-
+ 
 export const useProducts = () => {
   const currentLang = i18n.language;
   const [variants, setVariants] = useState([]);
@@ -19,30 +21,86 @@ export const useProducts = () => {
   const [hasLoaded, setHasLoaded] = useState(false);
   const [categories, setCategories] = useState([]);
   const [sortOption, setSortOption] = useState("default");
-
+ 
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const data = await fetchAllProducts();
-        const allVariants = data.products.flatMap((product) =>
-          product.variants.map((variant) => ({
-            ...variant,
-            productId: product._id,
-            categoryId: product.category?._id,
-          }))
-        );
-
+        setHasLoaded(false);
+       
+        // تحميل الفئات
+        const categoriesData = await fetchAllCategories();
+        setCategories(categoriesData.categories || []);
+       
+        // تحميل المنتجات
+        const productsData = await fetchAllProducts();
+       
+        console.log("API Response:", productsData);
+       
+        // معالجة المنتجات وفقًا لهيكل البيانات الفعلي
+        const allVariants = [];
+       
+        if (productsData.products && Array.isArray(productsData.products)) {
+          productsData.products.forEach(product => {
+            // استخراج معرفات الفئات من المنتج
+            let categoryMainId = null;
+            let categorySubId = null;
+           
+            // محاولة استخراج معرفات الفئات من مختلف الهياكل المحتملة
+            if (product.category) {
+              if (product.category.main && product.category.main._id) {
+                categoryMainId = product.category.main._id;
+              }
+              if (product.category.sub && product.category.sub._id) {
+                categorySubId = product.category.sub._id;
+              }
+            } else if (product.categories) {
+              if (product.categories.main && product.categories.main._id) {
+                categoryMainId = product.categories.main._id;
+              }
+              if (product.categories.sub && product.categories.sub._id) {
+                categorySubId = product.categories.sub._id;
+              }
+            }
+           
+            // إضافة المنتجات
+            if (product.variants && Array.isArray(product.variants)) {
+              product.variants.forEach(variant => {
+                allVariants.push({
+                  ...variant,
+                  productId: product._id,
+                  productName: product.name,
+                  productDescription: product.description,
+                  // إضافة معرفات الفئات
+                  categoryMainId,
+                  categorySubId,
+                  // احتفظ بالهيكل الأصلي للفئات للتصحيح
+                  productCategory: product.category || product.categories
+                });
+              });
+            }
+          });
+        }
+       
+        console.log("Processed variants:", allVariants.length);
+        if (allVariants.length > 0) {
+          console.log("Sample variant with category info:", {
+            variant: allVariants[0],
+            categoryMainId: allVariants[0].categoryMainId,
+            categorySubId: allVariants[0].categorySubId
+          });
+        }
+       
         setVariants(allVariants);
-
-        // Process color options
+       
+        // معالجة الألوان
         const colorCounts = {};
         allVariants.forEach((variant) => {
           if (variant.color?.[currentLang]) {
-            const colorName = variant.color?.[currentLang].toLowerCase();
+            const colorName = variant.color[currentLang].toLowerCase();
             colorCounts[colorName] = (colorCounts[colorName] || 0) + 1;
           }
         });
-
+ 
         const colorsWithCounts = Object.entries(colorCounts).map(
           ([name, count]) => ({
             name: name.charAt(0).toUpperCase() + name.slice(1),
@@ -50,42 +108,43 @@ export const useProducts = () => {
             originalName: name,
           })
         );
-
+ 
         setColorOptions(colorsWithCounts.sort((a, b) => a.name.localeCompare(b.name)));
-
-        // Set price range
-        const prices = allVariants.map((v) => v.price || 0);
+ 
+        // معالجة نطاق الأسعار
+        const prices = allVariants.map((v) => {
+          // استخدام سعر التخفيض إذا كان موجودًا، وإلا استخدام السعر العادي
+          return v.discountPrice !== null && v.discountPrice !== undefined
+            ? v.discountPrice
+            : v.price || 0;
+        });
+        const regularPrices = allVariants.map((v) => v.price || 0);
+ 
+        // أقل سعر يكون أقل سعر تخفيض
         const minPrice = Math.floor(Math.min(...prices));
-        const maxPrice = Math.ceil(Math.max(...prices));
+        // أكبر سعر يكون أكبر سعر عادي
+        const maxPrice = Math.ceil(Math.max(...regularPrices));
+ 
+        console.log("Price range calculation:", {
+          minPrice,
+          maxPrice,
+          pricesCount: prices.length,
+          regularPricesCount: regularPrices.length
+        });
+ 
         setPriceRange({ min: minPrice, max: maxPrice });
         setSliderValues({ min: minPrice, max: maxPrice });
         setTempSliderValues({ min: minPrice, max: maxPrice });
-      } catch (err) {
-        console.error("Failed to load products:", err);
+      } catch (error) {
+        console.error("Failed to load products or categories:", error);
       } finally {
         setHasLoaded(true);
       }
     };
-
+   
     loadProducts();
-  }, []);
-
-  // fetch Categories Data
-  useEffect(() => {
-    const getCategories = async () => {
-      try {
-        const data = await fetchAllCategories();
-        setCategories(data.categories || []);
-      } catch (error) {
-        console.error("Failed to load categories", error);
-        setCategories([]);
-      }
-    };
-
-    getCategories();
-  }, []);
-
-  // Sort products
+  }, [currentLang]);
+ 
   const sortVariants = useCallback(
     (variants) => {
       return [...variants].sort((a, b) => {
@@ -93,7 +152,7 @@ export const useProducts = () => {
         const priceB = b.discountPrice || b.price || 0;
         const nameA = a.name?.en || "";
         const nameB = b.name?.en || "";
-
+ 
         switch (sortOption) {
           case "price-asc":
             return priceA - priceB;
@@ -110,45 +169,84 @@ export const useProducts = () => {
     },
     [sortOption]
   );
-
-  // Filter products
+ 
+  // دالة لاستخراج معرفات الفئات من المنتج
+  const extractCategoryIds = (variant) => {
+    const categoryIds = [];
+   
+    // إضافة معرف الفئة الرئيسية إذا كان موجودًا
+    if (variant.categoryMainId) {
+      categoryIds.push(variant.categoryMainId);
+    }
+   
+    // إضافة معرف الفئة الفرعية إذا كان موجودًا
+    if (variant.categorySubId) {
+      categoryIds.push(variant.categorySubId);
+    }
+   
+    // إضافة معرفات الفئات من كائن المنتج إذا كان موجودًا
+    if (variant.productCategory) {
+      if (variant.productCategory.main?._id) {
+        categoryIds.push(variant.productCategory.main._id);
+      }
+      if (variant.productCategory.sub?._id) {
+        categoryIds.push(variant.productCategory.sub._id);
+      }
+    }
+   
+    // إضافة معرف الفئة من الكائن نفسه إذا كان موجودًا
+    if (variant.category?._id) {
+      categoryIds.push(variant.category._id);
+    }
+   
+    // إضافة معرف الفئة من الكائن نفسه إذا كان موجودًا كسلسلة نصية
+    if (typeof variant.category === 'string') {
+      categoryIds.push(variant.category);
+    }
+   
+    // إزالة التكرارات
+    return [...new Set(categoryIds)];
+  };
+ 
   const filteredVariants = sortVariants(
     variants.filter((variant) => {
-      const matchesSearch = (variant.name?.[currentLang]|| "")
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-
+      const matchesSearch =
+        (variant.name?.[currentLang] || "").toLowerCase().includes(searchTerm.toLowerCase());
+ 
       const matchesColor =
         selectedColors.length === 0 ||
-        (variant.color?.[currentLang]&&
-          selectedColors.includes(variant.color?.[currentLang].toLowerCase()));
-
+        (variant.color?.[currentLang] &&
+          selectedColors.includes(variant.color[currentLang].toLowerCase()));
+ 
+      // استخدام سعر التخفيض إذا كان موجودًا، وإلا استخدام السعر العادي
+      const variantPrice = variant.discountPrice !== null && variant.discountPrice !== undefined
+        ? variant.discountPrice
+        : variant.price || 0;
+ 
       const matchesPrice =
-        variant.price >= sliderValues.min && variant.price <= sliderValues.max;
-
+        variantPrice >= sliderValues.min && variantPrice <= sliderValues.max;
+ 
       const matchesCategory =
         selectedCategories.length === 0 ||
-        (variant.categoryId && selectedCategories.includes(variant.categoryId));
-
+        selectedCategories.some(catId =>
+          variant.categoryMainId === catId ||
+          variant.categorySubId === catId
+        );
+ 
       const matchesRating =
         selectedRatings.length === 0 ||
         (variant.averageRating !== undefined &&
-          selectedRatings.some((rating) => {
-            const starValue = Math.round(variant.averageRating / 2.6);
-            return starValue === rating;
-          }));
-
+          selectedRatings.includes(Math.round(variant.averageRating)));
+ 
       return matchesSearch && matchesColor && matchesPrice && matchesCategory && matchesRating;
     })
   );
-
-  // Pagination
+ 
   const totalPages = Math.ceil(filteredVariants.length / PRODUCTS_PER_PAGE);
   const indexOfLast = currentPage * PRODUCTS_PER_PAGE;
   const indexOfFirst = indexOfLast - PRODUCTS_PER_PAGE;
   const currentVariants = filteredVariants.slice(indexOfFirst, indexOfLast);
-
-  // Color filter handler
+ 
   const handleColorChange = (colorName) => {
     setSelectedColors((prev) =>
       prev.includes(colorName)
@@ -157,42 +255,56 @@ export const useProducts = () => {
     );
     setCurrentPage(1);
   };
-
-  // Category filter handler
+ 
   const handleCategoryChange = (categoryId) => {
-    setSelectedCategories((prev) =>
-      prev.includes(categoryId)
+    console.log("handleCategoryChange called with:", categoryId);
+    console.log("Current selectedCategories:", selectedCategories);
+   
+    // تأكد من أن categoryId ليس undefined أو null
+    if (!categoryId) {
+      console.error("Invalid categoryId:", categoryId);
+      return;
+    }
+   
+    setSelectedCategories((prev) => {
+      const newCategories = prev.includes(categoryId)
         ? prev.filter((c) => c !== categoryId)
-        : [...prev, categoryId]
-    );
+        : [...prev, categoryId];
+     
+      console.log("New selectedCategories:", newCategories);
+     
+      // تسجيل إضافي للتصحيح
+      setTimeout(() => {
+        console.log("selectedCategories after state update:", selectedCategories);
+      }, 0);
+     
+      return newCategories;
+    });
+   
     setCurrentPage(1);
   };
-
-  // Rating filter handler
+ 
   const handleRatingChange = (rating) => {
     setSelectedRatings((prev) =>
-      prev.includes(rating)
-        ? prev.filter((r) => r !== rating)
-        : [...prev, rating]
+      prev.includes(rating) ? prev.filter((r) => r !== rating) : [...prev, rating]
     );
     setCurrentPage(1);
   };
-
-  // Slider handlers
+ 
   const calculatePosition = (value) => {
     const range = priceRange.max - priceRange.min;
     return ((value - priceRange.min) / range) * 100;
   };
-
+ 
   const handleMouseDown = (handle) => setIsDragging(handle);
-
+ 
   const handleMouseMove = useCallback(
     (e) => {
       if (!isDragging) return;
-
+ 
       const slider = document.querySelector(".price-slider");
       if (!slider) return;
-
+ 
       const rect = slider.getBoundingClientRect();
       const position = Math.min(
         Math.max((e.clientX - rect.left) / rect.width, 0),
@@ -200,7 +312,7 @@ export const useProducts = () => {
       );
       const range = priceRange.max - priceRange.min;
       const newValue = Math.round(priceRange.min + position * range);
-
+ 
       setTempSliderValues((prev) => ({
         ...prev,
         [isDragging]:
@@ -211,9 +323,9 @@ export const useProducts = () => {
     },
     [isDragging, tempSliderValues, priceRange]
   );
-
+ 
   const handleMouseUp = useCallback(() => setIsDragging(null), []);
-
+ 
   useEffect(() => {
     if (isDragging) {
       window.addEventListener("mousemove", handleMouseMove);
@@ -224,12 +336,12 @@ export const useProducts = () => {
       };
     }
   }, [isDragging, handleMouseMove, handleMouseUp]);
-
+ 
   const applyPriceFilter = () => {
     setSliderValues(tempSliderValues);
     setCurrentPage(1);
   };
-
+ 
   const resetFilters = () => {
     setSearchTerm("");
     setSelectedColors([]);
@@ -240,7 +352,7 @@ export const useProducts = () => {
     setCurrentPage(1);
     setSortOption("default");
   };
-
+ 
   return {
     variants,
     currentVariants,
@@ -268,3 +380,4 @@ export const useProducts = () => {
     colorOptions,
   };
 };
+ 

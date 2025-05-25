@@ -2,14 +2,13 @@ import axios from "axios";
 
 // Create the axios instance
 export const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://furniture-nodejs-production-665a.up.railway.app",
 });
 
 // ✅ Request Interceptor → Attach token dynamically
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
-        console.log("TOEKN SENDING:", token, "➡️ To:", config.url); // ✅ اطبعي التوكن هنا
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

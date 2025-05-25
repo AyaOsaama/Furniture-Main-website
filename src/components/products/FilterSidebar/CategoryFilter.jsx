@@ -1,8 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import i18n from "../../../i18n"; 
+import i18n from "../../../i18n";
 
-const CategoryFilter = ({ categories, selectedCategories, handleCategoryChange }) => {
+const CategoryFilter = ({
+  categories,
+  selectedCategories,
+  handleCategoryChange,
+}) => {
   const { t } = useTranslation("products");
   const currentLang = i18n.language;
 
@@ -18,14 +22,22 @@ const CategoryFilter = ({ categories, selectedCategories, handleCategoryChange }
                   type="checkbox"
                   id={`category-${category._id}`}
                   checked={selectedCategories.includes(category._id)}
-                  onChange={() => handleCategoryChange(category._id)}
+                  onChange={() => {
+                    console.log("Clicked category id:", category._id);
+                    console.log("Current selectedCategories:", selectedCategories);
+                    handleCategoryChange(category._id);
+                  }}
                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                 />
                 <label
                   htmlFor={`category-${category._id}`}
                   className="ml-3 text-base text-gray-800 cursor-pointer"
                 >
-                  {category.name?.[currentLang]|| category.name || t("categories.unnamed")}
+                  {typeof category.name === "object"
+                    ? category.name[currentLang] ||
+                      Object.values(category.name)[0] ||
+                      t("categories.unnamed")
+                    : category.name || t("categories.unnamed")}
                 </label>
               </div>
             ))}
@@ -39,22 +51,27 @@ const CategoryFilter = ({ categories, selectedCategories, handleCategoryChange }
                 />
                 <div className="max-h-0 overflow-hidden peer-checked:max-h-[1000px] transition-all duration-300">
                   {categories.slice(5).map((category) => (
-                    <div
-                      key={category._id}
-                      className="flex items-center mt-2"
-                    >
+                    <div key={category._id} className="flex items-center mt-2">
                       <input
                         type="checkbox"
                         id={`category-${category._id}`}
                         checked={selectedCategories.includes(category._id)}
-                        onChange={() => handleCategoryChange(category._id)}
+                        onChange={() => {
+                          console.log("Clicked category id:", category._id);
+                          console.log("Current selectedCategories:", selectedCategories);
+                          handleCategoryChange(category._id);
+                        }}
                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                       />
                       <label
                         htmlFor={`category-${category._id}`}
                         className="ml-3 text-base text-gray-800 cursor-pointer"
                       >
-                        {category.name?.[currentLang]|| category.name || t("categories.unnamed")}
+                        {typeof category.name === "object"
+                          ? category.name[currentLang] ||
+                            Object.values(category.name)[0] ||
+                            t("categories.unnamed")
+                          : category.name || t("categories.unnamed")}
                       </label>
                     </div>
                   ))}
