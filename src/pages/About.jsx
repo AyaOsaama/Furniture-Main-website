@@ -13,11 +13,37 @@ import cardTwo from "../assets/images/card-two.png";
 import cardThree from "../assets/images/card-three.png";
 import { useTranslation } from "react-i18next";
 import { SearchContext } from "../searchContext/SearchContext.jsx";
-import { useContext } from "react";
+import { React,useContext,Fragment } from "react";
+import TagsButtons from "../components/TageButton/TagesButton.jsx";
 
 function About() {
   const { t } = useTranslation("about");
   const { searchQuery } = useContext(SearchContext);
+  const sections = [
+    {
+      title: t("Sofas"),
+      image: cardOne,
+      description: t("stylishSofasDesc"),
+      tag: "sofas" 
+    },
+    {
+      title: t("chairs"),
+      image: cardTwo,
+      description: t("chairsDesc"),
+      tag: "chairs" 
+
+    },
+    {
+      title: t("decores"),
+      image: cardThree,
+      description: t("decorsDesc"),
+      tag: "decors"
+
+    },
+  ];
+  const filteredSections = sections.filter((section) =>
+    section.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   // بيانات المميزات مع localization
   const features = [
@@ -62,13 +88,10 @@ function About() {
     },
   ];
 //huhuiuguguihouigoiuhuih
+
   // فلترة حسب البحث
   const filteredFeatures = features.filter((item) =>
     item.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const filteredPosts = blogPosts.filter((post) =>
-    post.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -108,26 +131,39 @@ function About() {
       </div>
 
       {/* BLOG POSTS */}
-      <div className="mt-12 px-4">
-        <p className="font-bold text-xl">{t("lastBlogPost")}</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 px-4 mb-12">
-        {filteredPosts.length > 0 ? (
-          filteredPosts.map((post, index) => (
-            <Card
-              key={index}
-              imageCard={post.image}
-              titleCard={post.title}
-              dateCard={post.date}
-            />
-          ))
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4 my-12">
+  {filteredSections.length > 0 ? (
+    filteredSections.map((section, index) => (
+      <div
+        key={index}
+        className="flex flex-col items-center bg-white rounded-lg shadow-md p-6"
+      >
+        <img
+          src={section.image}
+          alt={section.title}
+          className="w-full max-w-[280px] sm:max-w-[350px] mb-4"
+        />
+        <h1 className="text-[#373737] text-2xl sm:text-3xl font-bold font-['PTSans'] uppercase mb-3 text-center">
+          {section.title}
+        </h1>
+        <p className="text-[#ABABAB] text-sm sm:text-base font-['PTSans'] max-w-md text-center mb-6">
+          {section.description}
+        </p>
+        {section.tag ? (
+          <TagsButtons tag={section.tag} />
         ) : (
-          <p className="col-span-full text-center text-gray-500">
-            {t("noBlogPostsFound") || "No blog posts found."}
-          </p>
+          <button className="btn btn-outline btn-sm w-full max-w-xs">
+            {t("viewMore")}
+          </button>
         )}
       </div>
+    ))
+  ) : (
+    <p className="col-span-full text-center text-gray-500 mt-8">
+      {t("noSectionsFound") || "No sections found."}
+    </p>
+  )}
+</div>
     </Layout>
   );
 }

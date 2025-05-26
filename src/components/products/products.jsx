@@ -124,9 +124,9 @@ const Products = () => {
   console.log("selectedCategories updated:", selectedCategories);
 }, [selectedCategories]);
   return (
-    <div className="flex flex-col-reverse lg:flex-row mx-20 my-15 gap-8 mt-10 p-8">
+    <div className="flex flex-col-reverse lg:flex-row my-15 mt-10 p-8">
       {/* Products section */}
-      <div className="lg:w-3/4 w-full mt-10">
+      <div className="lg:w-3/4 w-full lg:mt-10 ">
         {/* Product count and sort */}
         {hasLoaded && (
           <div className="flex md:flex-row flex-col md:gap-0 gap-4 justify-between items-center mb-4">

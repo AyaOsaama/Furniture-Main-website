@@ -32,6 +32,7 @@ import { FaComments } from "react-icons/fa";
 import "./chatbot-animate.css";
 import DesignProductByTag from "./components/ProductByTags/DesignProductByTag.jsx";
 import { ProductsByTagProvider } from './contexts/ProductsByTagContext';
+import { fetchWishlist } from "./redux/wishList.js";
 
 const LayoutWithNavFooter = ({ children }) => (
   <>
@@ -243,6 +244,7 @@ function App() {
     const userId = userData?.id;
     if (userId) {
       dispatch(fetchCart(userId));
+         dispatch(fetchWishlist());
     }
   }, [dispatch]);
 

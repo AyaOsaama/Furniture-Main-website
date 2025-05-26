@@ -47,9 +47,10 @@ const FilterSidebar = ({
   }, [isOpen]);
 
   return (
-    <div className="lg:w-1/4 p-10">
+
+    <div className="lg:w-1/4 pt-10 pb-8 pl-4 pr-4 ">
       {/* Mobile dropdown toggle */}
-      <div className="lg:hidden mb-4">
+      <div className="lg:hidden ">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="filter-toggle-button flex items-center justify-between w-full bg-gray-200 hover:bg-gray-300 py-3 px-4 rounded"
