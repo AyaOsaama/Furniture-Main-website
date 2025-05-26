@@ -61,7 +61,7 @@ function About() {
       date: t("card3Date"),
     },
   ];
-
+//huhuiuguguihouigoiuhuih
   // فلترة حسب البحث
   const filteredFeatures = features.filter((item) =>
     item.title.toLowerCase().includes(searchQuery.toLowerCase())
