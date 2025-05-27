@@ -69,25 +69,7 @@ function About() {
     },
   ];
 
-  // بيانات البوستات مع localization
-  const blogPosts = [
-    {
-      image: cardOne,
-      title: t("card1Title"),
-      date: t("card1Date"),
-    },
-    {
-      image: cardTwo,
-      title: t("card2Title"),
-      date: t("card2Date"),
-    },
-    {
-      image: cardThree,
-      title: t("card3Title"),
-      date: t("card3Date"),
-    },
-  ];
-//huhuiuguguihouigoiuhuih
+
 
   // فلترة حسب البحث
   const filteredFeatures = features.filter((item) =>

@@ -25,7 +25,7 @@ const ProductTabs = ({ product }) => {
   
 
   return (
-    <div className="mt-12">
+    <div className="lg:mt-12">
       <div className="flex border-b border-gray-200">
         {tabs.map((tab) => (
           <button

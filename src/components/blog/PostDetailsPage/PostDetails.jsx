@@ -57,9 +57,9 @@ const PostDetails = () => {
     return <div className="py-8">{t("postNotFound")}</div>;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 mt-10">
+<div className="max-w-6xl mx-auto px-4 py-8 mt-18 md:mt-20 lg:mt-10">
       <Link to={`/blog`}>
-        <button className="flex items-center text-gray-600 hover:text-black mb-6 transition-all duration-300 group cursor-pointer">
+        <button className="flex items-center text-gray-600 hover:text-black lg:mb-6  transition-all duration-300 group cursor-pointer ">
           <FiArrowLeft className="mr-2 transition-all duration-300 group-hover:-translate-x-1" />
           <span>{t("backToPosts")}</span>
         </button>

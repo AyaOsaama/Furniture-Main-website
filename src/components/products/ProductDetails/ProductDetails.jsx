@@ -49,7 +49,7 @@ const ProductDetails = () => {
   if (!product) return null;
 
   return (
-    <div className="container mx-auto my-20 px-4 py-8 md:py-12">
+    <div className="container mx-auto my-20 px-5 lg:px-20 py-8 md:py-12">
       <Link to="/shop">
         <button className="flex items-center text-gray-600 hover:text-black mb-6 transition-all duration-300 group cursor-pointer">
           <FiArrowLeft className="mr-2 transition-all duration-300 group-hover:-translate-x-1" />
@@ -59,7 +59,7 @@ const ProductDetails = () => {
 
       <div className="flex flex-col">
         {/* Product Image and Info Row */}
-        <div className="flex flex-col md:flex-row gap-8 mb-12">
+        <div className="flex flex-col md:flex-row gap-8 lg:mb-12">
           <ProductImages
             variant={product.variants[selectedVariant]}
             selectedImage={selectedImage}

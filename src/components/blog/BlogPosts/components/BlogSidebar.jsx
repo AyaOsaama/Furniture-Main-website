@@ -73,7 +73,8 @@ const BlogSidebar = ({ posts, searchTerm, onSearchChange }) => {
                 return (
                   <Link to={`/blog/${post._id}`}>
                   <div key={`recent-${post._id}`} className="flex items-center justify-between mb-4">
-                    <h4 className="text-base text-heading-blog">{postTitle}</h4>
+               <h4 className="text-base text-heading-blog hover:underline">{postTitle}</h4>
+
                     <div className="text-xs text-gray-500">
                       {new Date(post.createdAt).toLocaleDateString("en-US", {
                         month: "short",

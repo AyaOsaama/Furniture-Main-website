@@ -64,7 +64,7 @@ const RelatedProducts = ({ currentProductId }) => {
   };
 
   return (
-    <div className="mt-16 max-w-7xl mx-auto relative">
+    <div className="max-w-7xl mx-auto relative lg:mt-5 mt-8 px-4">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold mb-8 text-primary text-center md:text-start">
           {t("relatedProducts.title")}

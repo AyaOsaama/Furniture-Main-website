@@ -11,7 +11,7 @@ const BlogPost = ({ post }) => {
   const [hovered, setHovered] = useState(false);
 
   return (
-    <article className="mb-12 mt-10 p-8">
+    <article className="lg:mb-12 lg:mt-10 lg:p-8 sm:p-6 px-4 pb-5 ">
       {post.image && (
         <Link to={`/blog/${post._id}`}>
           <img
@@ -71,13 +71,13 @@ const BlogPost = ({ post }) => {
         </h2>
       </Link>
 
-      <p className="text-gray-500 mb-4">
+      <p className="text-gray-500 mb-4 ">
         {post.content[currentLanguage] || post.content.ar || t("blogPost.defaultContent")}
       </p>
 
       <Link
         to={`/blog/${post._id}`}
-        className="text-read-more underline underline-offset-4 font-medium"
+className="text-read-more underline underline-offset-4 font-medium "
       >
         {t("blogPost.readMore")}
       </Link>

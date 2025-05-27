@@ -75,7 +75,7 @@ const Blog = () => {
         searchPlaceholder={t("blogSidebar.searchPlaceholder")}
       />
 
-      <div className="lg:w-3/4 lg:order-1 order-2">
+      <div className="lg:w-3/4 lg:order-1 order-2 ">
         {loading ? (
           <LoadingSkeleton count={3} />
         ) : (
