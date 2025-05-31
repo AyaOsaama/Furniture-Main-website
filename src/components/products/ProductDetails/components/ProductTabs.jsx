@@ -7,21 +7,21 @@ import Reviews from "./Reviews";
 const ProductTabs = ({ product }) => {
   const [activeTab, setActiveTab] = useState("description");
   const { t, i18n } = useTranslation("productdetails");
-  const tabs = ["description", "additional", "preview"];
+  const tabs = ["description", "preview"];
 
   // State to track if there are ratings
   const [hasRatings, setHasRatings] = useState(null);
 
-  useEffect(() => {
-    if (activeTab === "additional" && product?._id) {
-      api.get(`/ratings/product/${product._id}`)
-        .then(res => {
-          const ratings = res.data?.ratings || [];
-          setHasRatings(ratings.length > 0);
-        })
-        .catch(() => setHasRatings(false));
-    }
-  }, [activeTab, product?._id]);
+  // useEffect(() => {
+  //   if (activeTab === "additional" && product?._id) {
+  //     api.get(`/ratings/product/${product._id}`)
+  //       .then(res => {
+  //         const ratings = res.data?.ratings || [];
+  //         setHasRatings(ratings.length > 0);
+  //       })
+  //       .catch(() => setHasRatings(false));
+  //   }
+  // }, [activeTab, product?._id]);
   
 
   return (
@@ -50,7 +50,7 @@ const ProductTabs = ({ product }) => {
             </p>
           </div>
         )}
-
+{/* 
         {activeTab === "additional" && (
           <div className="flex justify-center" style={{ width: '100%' }}>
             {hasRatings === null ? (
@@ -61,7 +61,7 @@ const ProductTabs = ({ product }) => {
               <p className="text-gray-500">{t("productTabs.noAdditional")}</p>
             )}
           </div>
-        )}
+        )} */}
 
         {activeTab === "preview" && (
           <Reviews productId={product._id} />

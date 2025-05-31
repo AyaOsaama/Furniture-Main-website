@@ -34,7 +34,7 @@ export default function ProductsByTag({
               </>
             ) : (
               <div className="flex items-center gap-2">
-                <span>{t("no_products_title")}</span>
+                {/* <span>{t("no_products_title")}</span> */}
               </div>
             )}
           </div>

@@ -49,20 +49,20 @@ function Home() {
       title: t("stylishChairs"),
       image: Chair,
       description: t("stylishChairsDesc"),
-      tag: "chairs" 
+      tag: "chair" 
     },
     {
       title: t("table"),
       image: Table,
       description: t("tableDesc"),
-      tag: "tables" 
+      tag: "table" 
 
     },
     {
       title: t("contemporaryLamps"),
       image: Contemporarylamps,
       description: t("contemporaryLampsDesc"),
-      tag: "storage" 
+      tag: "decor" 
 
     },
   ];

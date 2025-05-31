@@ -98,16 +98,16 @@ const Cart = () => {
                         <td className="py-3">
                           <div className="flex items-center gap-2">
                             <img
-                              src={item.productId.variants[0].image}
+                              src={item?.productId?.variants[0]?.image}
                               className="w-14 h-14 object-contain rounded shrink-0"
                             />
                             <div className="flex flex-col overflow-hidden">
                               <h3 className="font-medium truncate">
-                                {item.productId.variants[0].name[currentLang]}
+                                {item?.productId?.variants[0]?.name[currentLang]}
                               </h3>
                               <p className="text-xs text-gray-500 truncate">
                                 {t("color")}:{" "}
-                                {item.productId.variants[0].color[currentLang]}
+                                {item?.productId?.variants[0]?.color[currentLang]}
                               </p>
                             </div>
                           </div>
@@ -194,8 +194,8 @@ const Cart = () => {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                       {/* الصورة */}
                       <img
-                        src={item.productId.variants[0].image}
-                        alt={item.productId.variants[0].name[currentLang]}
+                        src={item?.productId?.variants[0]?.image}
+                        alt={item?.productId?.variants[0]?.name[currentLang]}
                         className="w-full sm:w-32 h-32 object-cover rounded-lg"
                       />
 
@@ -203,11 +203,11 @@ const Cart = () => {
                       <div className="flex flex-col justify-between flex-1 w-full">
                         <div>
                           <h3 className="text-base font-semibold text-gray-800">
-                            {item.productId.variants[0].name[currentLang]}
+                            {item?.productId?.variants[0]?.name[currentLang]}
                           </h3>
                           <p className="text-sm text-gray-500">
                             {t("color")}:{" "}
-                            {item.productId.variants[0].color[currentLang]}
+                            {item?.productId?.variants[0]?.color[currentLang]}
                           </p>
                         </div>
 

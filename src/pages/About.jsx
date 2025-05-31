@@ -24,20 +24,20 @@ function About() {
       title: t("Sofas"),
       image: cardOne,
       description: t("stylishSofasDesc"),
-      tag: "sofas" 
+      tag: "sofa" 
     },
     {
       title: t("chairs"),
       image: cardTwo,
       description: t("chairsDesc"),
-      tag: "chairs" 
+      tag: "chair" 
 
     },
     {
       title: t("decores"),
       image: cardThree,
       description: t("decorsDesc"),
-      tag: "decors"
+      tag: "decor"
 
     },
   ];

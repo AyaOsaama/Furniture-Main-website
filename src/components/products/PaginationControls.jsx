@@ -4,8 +4,33 @@ import { useTranslation } from "react-i18next";
 const PaginationControls = ({ currentPage, totalPages, setCurrentPage }) => {
   const { t } = useTranslation("products");
 
+  const getPaginationNumbers = () => {
+    const range = [];
+    const delta = 2; // عدد الصفحات قبل/بعد الحالية
+
+    for (let i = 1; i <= totalPages; i++) {
+      if (
+        i === 1 ||
+        i === 2 ||
+        i === totalPages ||
+        i === totalPages - 1 ||
+        (i >= currentPage - delta && i <= currentPage + delta)
+      ) {
+        range.push(i);
+      } else if (
+        i === currentPage - delta - 1 ||
+        i === currentPage + delta + 1
+      ) {
+        range.push("...");
+      }
+    }
+
+    return [...new Set(range)]; // إزالة التكرار
+  };
+
   return (
     <nav className="flex items-center justify-center gap-x-1 mt-6">
+      {/* Previous Button */}
       <button
         onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
         disabled={currentPage === 1}
@@ -24,26 +49,33 @@ const PaginationControls = ({ currentPage, totalPages, setCurrentPage }) => {
         <span className="sr-only">{t("pagination.previous")}</span>
       </button>
 
+      {/* Page Numbers */}
       <div className="flex items-center gap-x-1">
-        {Array.from({ length: totalPages }, (_, index) => {
-          const page = index + 1;
-          const isActive = currentPage === page;
-          return (
+        {getPaginationNumbers().map((page, index) =>
+          page === "..." ? (
+            <span
+              key={index}
+              className="px-3 py-2 text-sm text-gray-500 select-none"
+            >
+              ...
+            </span>
+          ) : (
             <button
               key={page}
               onClick={() => setCurrentPage(page)}
               className={`min-h-9.5 min-w-9.5 flex justify-center items-center border ${
-                isActive
+                currentPage === page
                   ? "border-gray-200 text-gray-800 bg-gray-100"
                   : "border-transparent text-gray-800 hover:bg-gray-100"
               } py-2 px-3 text-sm rounded-lg cursor-pointer font-medium`}
             >
               {page}
             </button>
-          );
-        })}
+          )
+        )}
       </div>
 
+      {/* Next Button */}
       <button
         onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
         disabled={currentPage === totalPages}

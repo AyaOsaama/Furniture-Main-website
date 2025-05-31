@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import background from "../components/SignUp/assets/background.png";
+import { api } from "../axios/axios";
 
 const ChangePassword = () => {
   const { t } = useTranslation("changepassword");
@@ -17,7 +18,6 @@ const ChangePassword = () => {
 
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -32,30 +32,22 @@ const ChangePassword = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:3000/users/changePassword", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(form),
+      const { data } = await api.patch("/users/changePassword", {
+        oldPassword: form.oldPassword,
+        newPassword: form.newPassword,
+        confirmPassword: form.confirmPassword,
       });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(data.message || t("errorUpdateFailed"));
-        if (res.status === 401 || res.status === 403) {
-          logout();
-          navigate("/login");
-        }
-        return;
-      }
 
       toast.success(data.message);
       navigate("/profile");
     } catch (error) {
-      toast.error(t("errorSomethingWentWrong"));
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        toast.error(t("errorSessionExpired"));
+        logout();
+        navigate("/login");
+      } else {
+        toast.error(error.response?.data?.message || t("errorUpdateFailed"));
+      }
     }
   };
 
