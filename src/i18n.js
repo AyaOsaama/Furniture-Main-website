@@ -5,7 +5,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 // Imports for En.json
 import navbarEN from "./locales/en/navbar.json";
 import aboutEN from "./locales/en/about.json";
-import blogEN from "./locales/en/blog.json";
+import blogEN from "./locales/en/Blog.json";
 import cartEN from "./locales/en/cart.json"; 
 import changepasswordEN from "./locales/en/changepassword.json"; 
 import checkoutEN from "./locales/en/checkout.json";
@@ -26,7 +26,7 @@ import chatbotEN from "./locales/en/chatbot.json";
 // Imports for Ar.json
 import navbarAR from "./locales/ar/navbar.json";
 import aboutAR from "./locales/ar/about.json";
-import blogAR from "./locales/ar/blog.json";
+import blogAR from "./locales/ar/Blog.json";
 import cartAR from "./locales/ar/cart.json"; 
 import changepasswordAR from "./locales/ar/changepassword.json";
 import checkoutAR from "./locales/ar/checkout.json";
