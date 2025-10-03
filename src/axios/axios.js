@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create the axios instance
 export const api = axios.create({
-  baseURL: "https://furniture-nodejs-production-665a.up.railway.app",
+  baseURL: "https://furniture-node-js-api.vercel.app",
 });
 
 // ✅ Request Interceptor → Attach token dynamically

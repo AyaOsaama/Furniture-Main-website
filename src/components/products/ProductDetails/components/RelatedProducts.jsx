@@ -20,7 +20,7 @@ const RelatedProducts = ({ currentProductId }) => {
     const fetchRelatedProducts = async () => {
       try {
         const { data } = await axios.get(
-          `https://furniture-nodejs-production-665a.up.railway.app/products/related/${currentProductId}`
+          `https://furniture-node-js-api.vercel.app/products/related/${currentProductId}`
         );
         setProducts(data);
       } catch (error) {

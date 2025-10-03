@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { api } from '../axios/axios';
-import i18n from '../i18n';
 
 const ProductsByTagContext = createContext();
 
@@ -13,14 +12,14 @@ export const useProductsByTag = ({ tagName = null } = {}) => {
 };
 
 export const ProductsByTagProvider = ({ children }) => {
-  const currentLang = i18n.language;
+  // const currentLang = i18n.language;
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedRatings, setSelectedRatings] = useState([]);
-  const [colorOptions, setColorOptions] = useState([]);
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 });
+  const [colorOptions] = useState([]);
+  const [priceRange] = useState({ min: 0, max: 1000 });
   const [sliderValues, setSliderValues] = useState({ min: 0, max: 1000 });
   const [tempSliderValues, setTempSliderValues] = useState({ min: 0, max: 1000 });
   const [isDragging, setIsDragging] = useState(null);
